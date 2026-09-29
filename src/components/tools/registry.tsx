@@ -87,6 +87,9 @@ export const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
 
   // Documents (server, custom UI)
   "invoice-generator": d(() => import("@/components/tools/impl/invoice-generator")),
+
+  // Video downloader (server, yt-dlp, custom UI)
+  "video-downloader": d(() => import("@/components/tools/impl/video-downloader")),
 };
 
 export function hasToolComponent(slug: string): boolean {

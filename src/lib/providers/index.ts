@@ -86,6 +86,20 @@ export async function getProviderHealth(): Promise<ProviderHealth[]> {
   // --- Media engine (FFmpeg) ---
   list.push({ id: "media", name: "Media Engine (FFmpeg)", category: "media", status: "configured", detail: "FFmpeg 7.1 available.", lastChecked: now });
 
+  // --- Video downloader (yt-dlp) ---
+  const { isBinaryAvailable } = await import("@/lib/utils/server");
+  const ytdlp = await isBinaryAvailable("yt-dlp").catch(() => false);
+  list.push({
+    id: "video-downloader",
+    name: "Video Downloader (yt-dlp)",
+    category: "media",
+    status: ytdlp ? "configured" : "not_configured",
+    detail: ytdlp
+      ? "yt-dlp available — supports YouTube, Instagram, TikTok, Twitter/X, Facebook, Twitch, Vimeo, Reddit and 1000+ sites. Note: some platforms (YouTube, Vimeo) may require cookies/auth from server IPs and can block automated requests."
+      : "yt-dlp not installed. Install via `pip install yt-dlp`.",
+    lastChecked: now,
+  });
+
   // --- OCR engine (Tesseract) ---
   list.push({ id: "ocr", name: "OCR Engine (Tesseract)", category: "ocr", status: "configured", detail: "Tesseract 5.5 available.", lastChecked: now });
 
@@ -146,7 +160,7 @@ export async function getProviderHealth(): Promise<ProviderHealth[]> {
 
   // --- Malware scanner (ClamAV) ---
   // Real check: is clamscan/clamdscan on PATH?
-  const { isBinaryAvailable } = await import("@/lib/utils/server");
+  // (isBinaryAvailable imported earlier for yt-dlp check)
   const clam = await isBinaryAvailable("clamscan").catch(() => false) || await isBinaryAvailable("clamdscan").catch(() => false);
   list.push({
     id: "malware",

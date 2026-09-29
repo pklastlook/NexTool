@@ -238,6 +238,51 @@ For ARM hosts, install via your distro's package manager (Ubuntu 24.04 ships FFm
 
 ---
 
+## yt-dlp install (Video Downloader)
+
+Used by the `video-downloader` tool to download videos from YouTube, Instagram,
+TikTok, Twitter/X, Facebook, Twitch, Vimeo, Reddit, Pinterest, Snapchat,
+LinkedIn, SoundCloud, BiliBili, Dailymotion and 1000+ more sites.
+
+- **Bare metal / VM**:
+  ```bash
+  # Install via pip (Python 3.9+ required)
+  pip3 install -U yt-dlp
+  # Verify:
+  yt-dlp --version
+  # → 2026.xx.xx or later recommended (updated frequently for platform changes)
+  ```
+- **Docker**: install in the `app` image (the download runs in the web process
+  for live progress, not in a worker). Add `pip3 install -U yt-dlp` to the
+  Dockerfile runtime stage.
+
+### Honest platform caveats
+
+yt-dlp is the real, legitimate engine, but platforms actively detect and block
+automated server traffic:
+
+| Platform | Typical behavior from a server IP |
+|----------|-----------------------------------|
+| **YouTube** | Requires cookies / "Sign in to confirm you're not a bot" — server-only IPs are routinely blocked. Pass `--cookies-from-browser` or `--cookies cookies.txt` from a browser session to enable. |
+| **Vimeo** | Requires login for most content (`--cookies`). |
+| **Instagram** | Public posts usually work; private/reels often need login. |
+| **TikTok** | Generally works without auth (changes frequently). |
+| **Twitter/X** | Public tweets work; some require login. |
+| **Facebook** | Public videos work; private/reels need login. |
+| **Direct video URLs** (`.mp4`, `.webm`) | Always work (no extractor needed). |
+
+The tool surfaces the real yt-dlp error message — it never fakes success. If a
+platform blocks the request, the UI shows the exact error and suggests fixes.
+
+### Legal / compliance
+
+Only download content you own, have permission to use, or that is in the
+public domain / Creative Commons. Downloading copyrighted material without
+permission may violate platform Terms of Service or copyright law in your
+jurisdiction. The tool shows a clear disclaimer in the UI.
+
+---
+
 ## Tesseract + language packs
 
 Used by `worker-ocr` for `image-to-text` (OCR).

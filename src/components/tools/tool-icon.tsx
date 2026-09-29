@@ -9,7 +9,7 @@ import {
   Binary, Link, KeyRound, Fingerprint, Hash, Palette, FileCode, Clock, Regex,
   Tags, Link2, Bot, Instagram, Youtube, Type, ALargeSmall, Eraser, GitCompare,
   AlignLeft, Cake, HeartPulse, Ruler, Globe, Home, LayoutGrid, Activity,
-  ScanText, Barcode, Music2,
+  ScanText, Barcode, Music2, Download,
   type LucideProps,
 } from "lucide-react";
 
@@ -22,7 +22,7 @@ const MAP: Record<string, React.ComponentType<LucideProps>> = {
   Binary, Link, KeyRound, Fingerprint, Hash, Palette, FileCode, Clock, Regex,
   Tags, Link2, Bot, Instagram, Youtube, Type, ALargeSmall, Eraser, GitCompare,
   AlignLeft, Cake, HeartPulse, Ruler, Globe, Home, LayoutGrid, Activity,
-  ScanText, Barcode,
+  ScanText, Barcode, Download,
 };
 
 export function ToolIcon({ name, className, ...props }: { name?: string; className?: string } & LucideProps) {
