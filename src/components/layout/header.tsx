@@ -18,6 +18,7 @@ import {
 import { CATEGORIES } from "@/lib/tool-registry";
 import { ToolIcon } from "@/components/tools/tool-icon";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { UserMenu } from "@/components/layout/user-menu";
 import { cn } from "@/lib/utils";
 
 interface HeaderProps {
@@ -28,6 +29,7 @@ const NAV = [
   { label: "Tools", href: "/tools" },
   { label: "Popular", href: "/tools?filter=popular" },
   { label: "New", href: "/tools?sort=new" },
+  { label: "API", href: "/api-docs" },
   { label: "Pricing", href: "/pricing" },
   { label: "Status", href: "/status" },
 ];
@@ -124,6 +126,8 @@ export function Header({ onCommandOpen }: HeaderProps) {
           </button>
 
           <ThemeToggle />
+
+          <UserMenu />
 
           {/* Mobile menu trigger */}
           <Button

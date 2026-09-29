@@ -1,0 +1,71 @@
+# =============================================================================
+# NexTool — .dockerignore
+# Anything not needed at build time should be listed here so the Docker build
+# context stays small (faster builds, smaller layer cache).
+# =============================================================================
+
+# --- Version control ---
+.git
+.gitignore
+.gitattributes
+
+# --- Node / bun ---
+node_modules
+**/node_modules
+.pnp.*
+.yarn/
+
+# --- Build output ---
+.next
+out
+dist
+build
+
+# --- Runtime / cache ---
+.cache
+*.log
+dev.log
+server.log
+.eslintcache
+*.tsbuildinfo
+
+# --- Local database + uploads (must NOT be baked into the image) ---
+db/*.db
+db/*.db-journal
+db/*.sqlite
+db/*.sqlite-journal
+tmp/
+upload/
+upload-page-preview.png
+
+# --- Environment (secrets!) ---
+.env
+.env.local
+.env.*.local
+
+# --- Editor / OS files ---
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# --- Tooling output ---
+tool-results/
+tests/*.sh
+examples/
+
+# --- Docs + scaffolding not needed in the runtime image ---
+docs/
+*.md
+!README.md
+Caddyfile
+prompt.txt
+Prompt2.txt
+
+# --- Misc ---
+Dockerfile
+Dockerfile.worker
+docker-compose.yml
+.dockerignore

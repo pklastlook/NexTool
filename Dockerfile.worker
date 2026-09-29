@@ -1,0 +1,135 @@
+# =============================================================================
+# NexTool — production Dockerfile for worker containers.
+#
+# Parametrized by WORKER_NAME build arg (e.g. "worker-pdf", "worker-office").
+# The build copies the worker entrypoint + the lib files it depends on, then
+# runs it as a non-root user.
+#
+# Each worker image installs the OS engines it needs:
+#   - worker-pdf:        ghostscript, poppler-utils (pdftoppm)
+#   - worker-office:     libreoffice (headless)
+#   - worker-image:      (sharp is pure npm, no extra OS deps)
+#   - worker-media:      ffmpeg
+#   - worker-ocr:        tesseract-ocr + language packs
+#   - worker-cleanup:    (none)
+#
+# Build:
+#   docker build --build-arg WORKER_NAME=worker-pdf \
+#     -t nextool-worker-pdf:latest -f Dockerfile.worker .
+#
+# Run:
+#   docker run --env-file .env -e WORKER_ID=pdf-01 nextool-worker-pdf:latest
+# =============================================================================
+ARG WORKER_NAME=worker-pdf
+ARG ENGINES=""
+
+# ---------------------------------------------------------------------------
+# Stage 1: deps
+# ---------------------------------------------------------------------------
+FROM oven/bun:1 AS deps
+WORKDIR /app
+
+COPY package.json bun.lock* ./
+COPY prisma ./prisma
+
+RUN bun install --frozen-lockfile || bun install
+
+# ---------------------------------------------------------------------------
+# Stage 2: builder (generate Prisma client)
+# ---------------------------------------------------------------------------
+FROM oven/bun:1 AS builder
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+RUN bunx prisma generate
+
+# ---------------------------------------------------------------------------
+# Stage 3: runtime — based on the WORKER_NAME arg, pick the right base image.
+# ---------------------------------------------------------------------------
+FROM oven/bun:1 AS runtime-base
+WORKDIR /app
+
+# Default engines (none) — overridden by named stages below.
+ARG WORKER_NAME
+ENV WORKER_NAME=${WORKER_NAME}
+
+# ---------------------------------------------------------------------------
+# Per-worker variants. Each one installs its specific OS engines + uses the
+# shared runtime-base logic above.
+# ---------------------------------------------------------------------------
+FROM runtime-base AS worker-pdf
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ghostscript poppler-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM runtime-base AS worker-office
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      libreoffice libreoffice-writer libreoffice-calc libreoffice-impress \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM runtime-base AS worker-image
+# Sharp is pure npm — no extra OS deps needed.
+RUN true
+
+FROM runtime-base AS worker-media
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM runtime-base AS worker-ocr
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      tesseract-ocr tesseract-ocr-eng tesseract-ocr-deu tesseract-ocr-fra \
+      tesseract-ocr-spa tesseract-ocr-ita tesseract-ocr-por tesseract-ocr-chi-sim \
+      tesseract-ocr-jpn tesseract-ocr-rus tesseract-ocr-ara \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM runtime-base AS worker-cleanup
+# Cleanup worker has no engines.
+RUN true
+
+# ---------------------------------------------------------------------------
+# Final selection: pick the per-worker stage by WORKER_NAME.
+# (BuildKit doesn't support dynamic FROM, so we list them all and the user
+#  uses a named target: --target worker-pdf. WORKER_NAME arg picks the entry.)
+# ---------------------------------------------------------------------------
+FROM worker-${WORKER_NAME#worker-} AS final
+
+# Install common runtime deps: tini for signal handling, libc6-compat for prisma.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      tini libc6-compat wget \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd -r -g 1001 nextool \
+    && useradd -r -u 1001 -g nextool -d /app -s /sbin/nologin nextool
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Copy node_modules (only what's needed at runtime)
+COPY --from=builder --chown=nextool:nextool /app/node_modules ./node_modules
+COPY --from=builder --chown=nextool:nextool /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextool:nextool /app/node_modules/@prisma ./node_modules/@prisma
+
+# Copy source (workers import from ../../src/lib/...)
+COPY --chown=nextool:nextool src ./src
+COPY --chown=nextool:nextool mini-services ./mini-services
+COPY --chown=nextool:nextool prisma ./prisma
+COPY --chown=nextool:nextool package.json bun.lock* tsconfig.json ./
+
+# Storage dirs (shared volume mounted at runtime; created here for local runs).
+RUN mkdir -p tmp/uploads tmp/outputs tmp/quarantine tmp/exports \
+  && chown -R nextool:nextool tmp
+
+USER nextool
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+# Healthcheck: verify the worker's lastHeartbeat is recent (≤30s for
+# processing workers, ≤60s for the cleanup worker which polls less often).
+# Uses bun to run a tiny inline script against Prisma.
+HEALTHCHECK --interval=15s --timeout=10s --retries=3 --start-period=30s \
+  CMD bun -e "import{PrismaClient}from'@prisma/client';const d=new PrismaClient();const r=await d.worker.findFirst({where:{workerId:process.env.WORKER_ID}});if(!r||!r.lastHeartbeat)process.exit(1);if(Date.now()-r.lastHeartbeat.getTime()>30000)process.exit(1);process.exit(0);" || exit 1
+
+# Run the named worker entrypoint.
+CMD ["sh", "-c", "bun mini-services/${WORKER_NAME}/index.ts"]

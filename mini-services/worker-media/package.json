@@ -1,0 +1,7 @@
+{
+  "name": "nextool-worker-media",
+  "private": true,
+  "scripts": {
+    "dev": "cd ../.. && bun --hot mini-services/worker-media/index.ts"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "nextool-worker-ocr",
+  "private": true,
+  "scripts": {
+    "dev": "cd ../.. && bun --hot mini-services/worker-ocr/index.ts"
+  }
+}

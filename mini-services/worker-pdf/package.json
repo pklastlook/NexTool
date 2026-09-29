@@ -1,0 +1,7 @@
+{
+  "name": "nextool-worker-pdf",
+  "private": true,
+  "scripts": {
+    "dev": "cd ../.. && bun --hot mini-services/worker-pdf/index.ts"
+  }
+}

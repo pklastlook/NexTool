@@ -31,6 +31,9 @@ model User {
   favorites     FavoriteTool[]
   history       ToolHistory[]
   analytics     AnalyticsEvent[]
+  subscriptions Subscription[]
+  payments      Payment[]
+  fileAssets    FileAsset[]
 }
 
 model Session {
@@ -96,48 +99,69 @@ model Tool {
 // ---------------------------------------------------------------------------
 
 model FileAsset {
-  id          String   @id @default(cuid())
-  userId      String?
-  originalName String
-  storedName  String
-  mimeType    String
-  size        Int
-  storagePath String
-  role        String   // input | output
-  jobId       String?
-  expiresAt   DateTime?
-  status      String   @default("active") // active | expired | deleted
-  createdAt   DateTime @default(now())
+  id              String   @id @default(cuid())
+  userId          String?
+  originalName    String
+  safeName        String   // sanitized, never trusted for path ops
+  mimeType        String   // client-declared (untrusted)
+  detectedMimeType String? // from magic bytes (authoritative)
+  extension       String
+  size            Int
+  checksum        String?  // sha256
+  storageKey      String   // provider-relative key
+  storagePath     String   // absolute/local path (sandbox only)
+  role            String   // input | output | quarantine | temporary
+  inputJobId      String?
+  outputJobId     String?
+  inputJob        ProcessingJob? @relation("JobInputs", fields: [inputJobId], references: [id])
+  outputJob       ProcessingJob? @relation("JobOutputs", fields: [outputJobId], references: [id])
+  scanStatus      String   @default("pending") // pending | clean | infected | suspicious | error | skipped
+  expiresAt       DateTime?
+  status          String   @default("active") // active | expired | deleted
+  createdAt       DateTime @default(now())
 
   @@index([userId])
-  @@index([jobId])
+  @@index([inputJobId])
+  @@index([outputJobId])
+  @@index([scanStatus])
+  @@index([status])
+
+  user            User?    @relation(fields: [userId], references: [id])
 }
 
 model ProcessingJob {
-  id           String   @id @default(cuid())
-  userId       String?
-  toolId       String
-  status       String   @default("created")
+  id              String   @id @default(cuid())
+  userId          String?
+  toolId          String
+  status          String   @default("created")
   // created | queued | validating | scanning | processing |
   // validating_output | completed | failed | cancelled | expired
-  priority     Int      @default(0)
-  attempts     Int      @default(0)
-  options      String?  // JSON string
-  errorCode    String?
-  errorMessage String?
-  resultMeta   String?  // JSON: sizes, counts, etc.
-  startedAt    DateTime?
-  completedAt   DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  priority        Int      @default(0)
+  attempts        Int      @default(0)
+  maxAttempts     Int      @default(3)
+  options         String?  // JSON string
+  errorCode       String?
+  errorMessage    String?
+  resultMeta      String?  // JSON: sizes, counts, etc.
+  workerId        String?  // which worker picked it up
+  idempotencyKey  String?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  expiresAt       DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  user         User?    @relation(fields: [userId], references: [id])
-  tool         Tool     @relation(fields: [toolId], references: [id])
-  events       JobEvent[]
+  user            User?    @relation(fields: [userId], references: [id])
+  tool            Tool     @relation(fields: [toolId], references: [id])
+  events          JobEvent[]
+  inputs          FileAsset[] @relation("JobInputs")
+  outputs         FileAsset[] @relation("JobOutputs")
 
   @@index([userId])
   @@index([toolId])
   @@index([status])
+  @@index([idempotencyKey])
+  @@index([priority])
 }
 
 model JobEvent {
@@ -260,4 +284,130 @@ model FeatureFlag {
   id       String @id @default(cuid())
   key      String @unique
   enabled  Boolean @default(false)
+}
+
+// ---------------------------------------------------------------------------
+// Tool versioning (Prompt2 §94)
+// ---------------------------------------------------------------------------
+
+model ToolVersion {
+  id        String   @id @default(cuid())
+  toolId    String
+  version   String
+  notes     String?
+  active    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([toolId])
+  @@unique([toolId, version])
+}
+
+// ---------------------------------------------------------------------------
+// Billing: Plans, Subscriptions, Payments (Prompt2 §34, §50-52)
+// ---------------------------------------------------------------------------
+
+model Plan {
+  id              String   @id @default(cuid())
+  slug            String   @unique        // free | pro | business
+  name            String
+  description     String?
+  priceMonthly    Int      @default(0)    // cents
+  priceYearly     Int      @default(0)    // cents
+  currency        String   @default("usd")
+  maxFileSize     Int      @default(10485760)
+  dailyJobs       Int      @default(20)
+  monthlyJobs     Int      @default(500)
+  batchAllowed    Boolean  @default(false)
+  ocrAllowed      Boolean  @default(true)
+  apiAllowed      Boolean  @default(false)
+  priority        Int      @default(0)    // 0=free, 1=pro, 2=business
+  adFree          Boolean  @default(false)
+  historyDays     Int      @default(7)
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  subscriptions   Subscription[]
+}
+
+model Subscription {
+  id              String   @id @default(cuid())
+  userId          String
+  planId          String
+  status          String   @default("active") // active | canceled | past_due | trialing
+  stripeCustomerId String?
+  stripeSubId     String?
+  currentPeriodEnd DateTime?
+  cancelAt        DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  plan            Plan     @relation(fields: [planId], references: [id])
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments        Payment[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  subscriptionId  String
+  userId          String
+  provider        String   // stripe | future
+  providerPaymentId String? @unique
+  amount          Int      // cents
+  currency        String   @default("usd")
+  status          String   // pending | succeeded | failed | refunded
+  invoiceUrl      String?
+  createdAt       DateTime @default(now())
+
+  subscription    Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([subscriptionId])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Provider connections & workers (Prompt2 §61, §43, §69)
+// ---------------------------------------------------------------------------
+
+model ProviderConnection {
+  id           String   @id @default(cuid())
+  provider     String   @unique // database | redis | storage | pdf | office | image | media | ocr | creative | email | payment | ai | analytics | monitoring | malware | turnstile | cloudflare
+  status       String   @default("not_configured") // configured | not_configured | connected | failed
+  detail       String?
+  lastCheckedAt DateTime?
+  checkedBy    String?  // health-check | manual
+}
+
+model Worker {
+  id            String   @id @default(cuid())
+  workerId      String   @unique   // e.g. pdf-01, office-02
+  queue         String   // pdf | office | image | media | ocr | creative | cleanup | notification | ai
+  status        String   @default("offline") // healthy | idle | busy | degraded | offline
+  version       String?
+  currentJobId  String?
+  lastHeartbeat DateTime?
+  startedAt     DateTime?
+  meta          String?  // JSON
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([queue])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Rate-limit bucket (in-memory primary, DB fallback for cross-process)
+// ---------------------------------------------------------------------------
+
+model RateLimitBucket {
+  id        String   @id @default(cuid())
+  key       String   @unique  // ip:1.2.3.4 | user:abc | apikey:xyz | endpoint:/api/v1/...
+  count     Int      @default(0)
+  windowStart DateTime
+  expiresAt DateTime
+  @@index([expiresAt])
 }

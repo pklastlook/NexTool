@@ -1,0 +1,293 @@
+# =============================================================================
+# NexTool — Docker Compose (dev / full-stack local)
+# Brings up the Next.js app, Postgres, Redis, and all 6 functional worker
+# services + the cleanup worker.
+#
+# Usage:
+#   cp .env.example .env   # then fill in real values
+#   docker compose up -d
+#   docker compose logs -f app worker-pdf
+#
+# Production notes:
+#   - This file is intended for local dev / single-host staging. For real
+#     production use, prefer a container orchestrator (k8s, ECS, Nomad) with
+#     the same images defined in ./Dockerfile and ./Dockerfile.worker.
+#   - Secrets MUST be provided via env_file (.env) — never commit secrets to
+#     the image.
+# =============================================================================
+name: nextool
+
+services:
+  # ---------------------------------------------------------------------------
+  # Database (PostgreSQL)
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nextool}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nextool}
+      POSTGRES_DB: ${POSTGRES_DB:-nextool}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nextool} -d ${POSTGRES_DB:-nextool}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [nextool-net]
+
+  # ---------------------------------------------------------------------------
+  # Redis (job queues, rate limiting, caching)
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [nextool-net]
+
+  # ---------------------------------------------------------------------------
+  # Next.js app (web + API)
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nextool}:${POSTGRES_PASSWORD:-nextool}@postgres:5432/${POSTGRES_DB:-nextool}?schema=public
+      REDIS_URL: redis://redis:6379/0
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persistent local file storage (used when STORAGE_* env vars are unset)
+      - uploads:/app/tmp/uploads
+      - outputs:/app/tmp/outputs
+      - quarantine:/app/tmp/quarantine
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks: [nextool-net]
+
+  # ---------------------------------------------------------------------------
+  # Workers — one container per queue.
+  # Uses Dockerfile.worker with WORKER_NAME build arg to pick the entrypoint.
+  # Each worker is independently scalable: `docker compose up --scale worker-pdf=3`.
+  # ---------------------------------------------------------------------------
+
+  worker-pdf:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+      args:
+        WORKER_NAME: worker-pdf
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nextool}:${POSTGRES_PASSWORD:-nextool}@postgres:5432/${POSTGRES_DB:-nextool}?schema=public
+      REDIS_URL: redis://redis:6379/0
+      NODE_ENV: production
+      WORKER_ID: pdf-01
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/tmp/uploads
+      - outputs:/app/tmp/outputs
+      - quarantine:/app/tmp/quarantine
+    healthcheck:
+      # Workers don't expose HTTP; we use bun to check the heartbeat was recent.
+      test: ["CMD-SHELL", "bun -e \"import{PrismaClient}from'@prisma/client';const d=new PrismaClient();const r=await d.worker.findFirst({where:{workerId:'pdf-01'}});if(!r||!r.lastHeartbeat)process.exit(1);if(Date.now()-r.lastHeartbeat.getTime()>30000)process.exit(1);process.exit(0);\""]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks: [nextool-net]
+
+  worker-office:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+      args:
+        WORKER_NAME: worker-office
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nextool}:${POSTGRES_PASSWORD:-nextool}@postgres:5432/${POSTGRES_DB:-nextool}?schema=public
+      REDIS_URL: redis://redis:6379/0
+      NODE_ENV: production
+      WORKER_ID: office-01
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/tmp/uploads
+      - outputs:/app/tmp/outputs
+      - quarantine:/app/tmp/quarantine
+    healthcheck:
+      test: ["CMD-SHELL", "bun -e \"import{PrismaClient}from'@prisma/client';const d=new PrismaClient();const r=await d.worker.findFirst({where:{workerId:'office-01'}});if(!r||!r.lastHeartbeat)process.exit(1);if(Date.now()-r.lastHeartbeat.getTime()>30000)process.exit(1);process.exit(0);\""]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks: [nextool-net]
+
+  worker-image:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+      args:
+        WORKER_NAME: worker-image
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nextool}:${POSTGRES_PASSWORD:-nextool}@postgres:5432/${POSTGRES_DB:-nextool}?schema=public
+      REDIS_URL: redis://redis:6379/0
+      NODE_ENV: production
+      WORKER_ID: image-01
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/tmp/uploads
+      - outputs:/app/tmp/outputs
+      - quarantine:/app/tmp/quarantine
+    healthcheck:
+      test: ["CMD-SHELL", "bun -e \"import{PrismaClient}from'@prisma/client';const d=new PrismaClient();const r=await d.worker.findFirst({where:{workerId:'image-01'}});if(!r||!r.lastHeartbeat)process.exit(1);if(Date.now()-r.lastHeartbeat.getTime()>30000)process.exit(1);process.exit(0);\""]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks: [nextool-net]
+
+  worker-media:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+      args:
+        WORKER_NAME: worker-media
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nextool}:${POSTGRES_PASSWORD:-nextool}@postgres:5432/${POSTGRES_DB:-nextool}?schema=public
+      REDIS_URL: redis://redis:6379/0
+      NODE_ENV: production
+      WORKER_ID: media-01
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/tmp/uploads
+      - outputs:/app/tmp/outputs
+      - quarantine:/app/tmp/quarantine
+    healthcheck:
+      test: ["CMD-SHELL", "bun -e \"import{PrismaClient}from'@prisma/client';const d=new PrismaClient();const r=await d.worker.findFirst({where:{workerId:'media-01'}});if(!r||!r.lastHeartbeat)process.exit(1);if(Date.now()-r.lastHeartbeat.getTime()>30000)process.exit(1);process.exit(0);\""]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks: [nextool-net]
+
+  worker-ocr:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+      args:
+        WORKER_NAME: worker-ocr
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nextool}:${POSTGRES_PASSWORD:-nextool}@postgres:5432/${POSTGRES_DB:-nextool}?schema=public
+      REDIS_URL: redis://redis:6379/0
+      NODE_ENV: production
+      WORKER_ID: ocr-01
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/tmp/uploads
+      - outputs:/app/tmp/outputs
+      - quarantine:/app/tmp/quarantine
+    healthcheck:
+      test: ["CMD-SHELL", "bun -e \"import{PrismaClient}from'@prisma/client';const d=new PrismaClient();const r=await d.worker.findFirst({where:{workerId:'ocr-01'}});if(!r||!r.lastHeartbeat)process.exit(1);if(Date.now()-r.lastHeartbeat.getTime()>30000)process.exit(1);process.exit(0);\""]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks: [nextool-net]
+
+  worker-cleanup:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+      args:
+        WORKER_NAME: worker-cleanup
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nextool}:${POSTGRES_PASSWORD:-nextool}@postgres:5432/${POSTGRES_DB:-nextool}?schema=public
+      REDIS_URL: redis://redis:6379/0
+      NODE_ENV: production
+      WORKER_ID: cleanup-01
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/tmp/uploads
+      - outputs:/app/tmp/outputs
+      - quarantine:/app/tmp/quarantine
+    healthcheck:
+      test: ["CMD-SHELL", "bun -e \"import{PrismaClient}from'@prisma/client';const d=new PrismaClient();const r=await d.worker.findFirst({where:{workerId:'cleanup-01'}});if(!r||!r.lastHeartbeat)process.exit(1);if(Date.now()-r.lastHeartbeat.getTime()>60000)process.exit(1);process.exit(0);\""]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks: [nextool-net]
+
+# =============================================================================
+# Volumes + networks
+# =============================================================================
+volumes:
+  postgres-data:
+  redis-data:
+  uploads:
+  outputs:
+  quarantine:
+
+networks:
+  nextool-net:
+    driver: bridge
