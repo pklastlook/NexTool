@@ -8,7 +8,7 @@ generator client {
 // PostgreSQL variant — auto-selected by scripts/setup-prisma.mjs when
 // DATABASE_URL points at a Postgres connection (e.g. Vercel + Neon).
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

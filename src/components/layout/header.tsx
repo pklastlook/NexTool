@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Search, Wrench, ChevronDown } from "lucide-react";
+import { Menu, X, Search, Wrench, ChevronDown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -15,7 +15,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { CATEGORIES } from "@/lib/tool-registry";
+import { CATEGORIES, TOOLS } from "@/lib/tool-registry";
 import { ToolIcon } from "@/components/tools/tool-icon";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { UserMenu } from "@/components/layout/user-menu";
@@ -26,11 +26,9 @@ interface HeaderProps {
 }
 
 const NAV = [
-  { label: "Tools", href: "/tools" },
+  { label: "All tools", href: "/tools" },
   { label: "Popular", href: "/tools?filter=popular" },
-  { label: "New", href: "/tools?sort=new" },
   { label: "API", href: "/api-docs" },
-  { label: "Pricing", href: "/pricing" },
   { label: "Status", href: "/status" },
 ];
 
@@ -53,55 +51,86 @@ export function Header({ onCommandOpen }: HeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
+        "sticky top-0 z-50 w-full transition-all duration-300 spring-smooth",
         scrolled
-          ? "border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60"
+          ? "glass border-b border-border/40"
           : "border-b border-transparent bg-transparent"
       )}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-semibold" aria-label="NexTool home">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-            <Wrench className="h-5 w-5" />
+      <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-3 px-3 sm:px-5">
+        {/* Logo — gradient brand mark */}
+        <Link href="/" className="flex items-center gap-2.5 font-semibold" aria-label="NexTool home">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[oklch(0.55_0.22_255)] to-[oklch(0.62_0.22_300)] text-white shadow-md">
+            <Wrench className="h-[18px] w-[18px]" />
           </span>
           <span className="text-[17px] tracking-tight">NexTool</span>
         </Link>
 
-        {/* Desktop nav */}
-        <div className="ml-4 hidden md:block">
+        {/* Desktop nav — mega menu */}
+        <div className="ml-3 hidden md:block">
           <NavigationMenu>
             <NavigationMenuList>
+              {/* Categories mega menu */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="rounded-full">Categories</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid w-[640px] gap-2 p-4 md:grid-cols-2 lg:grid-cols-3">
-                    {CATEGORIES.map((c) => (
-                      <NavigationMenuLink asChild key={c.slug}>
-                        <Link
-                          href={`/category/${c.slug}`}
-                          className="group flex items-start gap-3 rounded-lg border border-transparent p-3 transition hover:border-border hover:bg-accent"
-                        >
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
-                            <ToolIcon name={c.icon} className="h-[18px] w-[18px]" />
-                          </span>
-                          <span className="min-w-0">
-                            <span className="block text-sm font-medium">{c.name}</span>
-                            <span className="block text-xs text-muted-foreground line-clamp-2">
-                              {c.description}
-                            </span>
-                          </span>
-                        </Link>
-                      </NavigationMenuLink>
-                    ))}
+                  <div className="glass w-[760px] rounded-3xl p-4">
+                    <div className="mb-3 flex items-center justify-between px-2">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Browse {CATEGORIES.length} categories · {TOOLS.length}+ tools
+                      </span>
+                      <Link href="/tools" className="text-xs font-medium text-primary hover:underline">
+                        View all tools →
+                      </Link>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1.5 md:grid-cols-3">
+                      {CATEGORIES.map((c) => {
+                        const count = TOOLS.filter((t) => t.category === c.slug).length;
+                        return (
+                          <NavigationMenuLink asChild key={c.slug}>
+                            <Link
+                              href={`/category/${c.slug}`}
+                              style={{ ["--cat-color" as string]: `var(--cat-${c.slug})` }}
+                              className="group flex items-start gap-3 rounded-2xl border border-transparent p-3 transition spring-smooth hover:border-border/40 hover:bg-foreground/[0.03]"
+                            >
+                              <span
+                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition spring group-hover:scale-110"
+                                style={{
+                                  background: `var(--cat-${c.slug})`,
+                                  color: "white",
+                                }}
+                              >
+                                <ToolIcon name={c.icon} className="h-[18px] w-[18px]" />
+                              </span>
+                              <span className="min-w-0">
+                                <span className="block text-sm font-medium">{c.name}</span>
+                                <span className="block text-xs text-muted-foreground line-clamp-1">
+                                  {c.description}
+                                </span>
+                                <span
+                                  className="mt-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium"
+                                  style={{
+                                    background: `color-mix(in oklch, var(--cat-${c.slug}) 12%, transparent)`,
+                                    color: `var(--cat-${c.slug})`,
+                                  }}
+                                >
+                                  {count} tools
+                                </span>
+                              </span>
+                            </Link>
+                          </NavigationMenuLink>
+                        );
+                      })}
+                    </div>
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
+              {/* Flat nav items */}
               {NAV.map((item) => (
                 <NavigationMenuItem key={item.href}>
                   <Link href={item.href} legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "rounded-full")}>
                       {item.label}
                     </NavigationMenuLink>
                   </Link>
@@ -112,21 +141,31 @@ export function Header({ onCommandOpen }: HeaderProps) {
         </div>
 
         <div className="ml-auto flex items-center gap-1.5">
-          {/* Command search button */}
+          {/* Command search — Spotlight style */}
           <button
             onClick={onCommandOpen}
-            className="group inline-flex h-9 items-center gap-2 rounded-full border bg-background/60 px-3 text-sm text-muted-foreground backdrop-blur transition hover:border-foreground/20 hover:text-foreground"
+            className="group hidden h-9 items-center gap-2 rounded-full border border-border/50 bg-background/50 px-3.5 text-sm text-muted-foreground backdrop-blur transition spring-smooth hover:border-border hover:bg-background/70 hover:text-foreground sm:inline-flex"
             aria-label="Open command search"
           >
-            <Search className="h-4 w-4" />
-            <span className="hidden sm:inline">Search…</span>
-            <kbd className="hidden items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium sm:inline-flex">
+            <Search className="h-4 w-4 shrink-0" />
+            <span>Search…</span>
+            <kbd className="ml-1 rounded border border-border/60 bg-muted/60 px-1.5 py-0.5 text-[10px] font-medium">
               ⌘K
             </kbd>
           </button>
 
-          <ThemeToggle />
+          {/* Mobile search icon */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onCommandOpen}
+            className="rounded-full sm:hidden"
+            aria-label="Search"
+          >
+            <Search className="h-[18px] w-[18px]" />
+          </Button>
 
+          <ThemeToggle />
           <UserMenu />
 
           {/* Mobile menu trigger */}
@@ -143,7 +182,7 @@ export function Header({ onCommandOpen }: HeaderProps) {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — glass dropdown */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -151,19 +190,19 @@ export function Header({ onCommandOpen }: HeaderProps) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t bg-background md:hidden"
+            className="glass overflow-hidden border-t border-border/40 md:hidden"
           >
-            <div className="space-y-1 px-4 py-3">
+            <div className="max-h-[70vh] space-y-1 overflow-y-auto px-3 py-3">
               {NAV.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
+                  className="block rounded-xl px-3 py-2.5 text-sm font-medium hover:bg-foreground/5"
                 >
                   {item.label}
                 </Link>
               ))}
-              <div className="px-3 pb-1 pt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <div className="px-3 pb-1 pt-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Categories
               </div>
               <div className="grid grid-cols-2 gap-1">
@@ -171,29 +210,33 @@ export function Header({ onCommandOpen }: HeaderProps) {
                   <Link
                     key={c.slug}
                     href={`/category/${c.slug}`}
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-accent"
+                    style={{ ["--cat-color" as string]: `var(--cat-${c.slug})` }}
+                    className="group flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm hover:bg-foreground/5"
                   >
-                    <ToolIcon name={c.icon} className="h-4 w-4 text-muted-foreground" />
+                    <span
+                      className="flex h-8 w-8 items-center justify-center rounded-lg text-white transition group-hover:scale-110"
+                      style={{ background: `var(--cat-${c.slug})` }}
+                    >
+                      <ToolIcon name={c.icon} className="h-4 w-4" />
+                    </span>
                     <span className="truncate">{c.name}</span>
                   </Link>
                 ))}
               </div>
+              <Link
+                href="/pricing"
+                className="mt-2 block rounded-2xl bg-gradient-to-br from-[oklch(0.55_0.22_255)] to-[oklch(0.62_0.22_300)] p-4 text-white"
+              >
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4" />
+                  <span className="text-sm font-semibold">Go Pro</span>
+                </div>
+                <p className="mt-1 text-xs text-white/80">Larger files, batch processing & priority.</p>
+              </Link>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </header>
-  );
-}
-
-export function CommandSearchButton({ onOpen }: { onOpen: () => void }) {
-  return (
-    <button
-      onClick={onOpen}
-      className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm text-muted-foreground transition hover:text-foreground"
-    >
-      <Search className="h-4 w-4" /> Search tools
-      <kbd className="rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium">⌘K</kbd>
-    </button>
   );
 }
