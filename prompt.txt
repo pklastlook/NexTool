@@ -1,0 +1,2889 @@
+MASTER BUILD PROMPT — PREMIUM ALL-IN-ONE ONLINE TOOLS PLATFORM
+PROJECT
+
+Build a production-grade, full-stack online tools platform that provides a large collection of practical digital utilities from one premium web application.
+
+The platform should become a serious commercial product where users can:
+
+Convert files
+Compress files
+Merge and split files
+Edit documents
+Generate business documents
+Process images
+Process video and audio
+Convert Microsoft Office files
+Process supported Adobe/creative files
+Perform OCR
+Generate QR codes and barcodes
+Use business calculators
+Use developer utilities
+Perform SEO tasks
+Create e-commerce assets
+Create social-media assets
+Use selected AI-powered tools
+Access tools through an API
+
+This must be a REAL application.
+
+This is NOT a prototype.
+
+This is NOT a visual-only demo.
+
+This is NOT a collection of mocked tools.
+
+Every feature represented as available must actually work.
+
+1. MOST IMPORTANT RULES
+
+These rules apply to the entire project.
+
+NEVER use:
+
+Mock data
+Dummy data
+Fake data
+Hardcoded dashboard statistics
+Fake API responses
+Fake processing results
+Fake conversion results
+Fake downloads
+Fake analytics
+Fake users
+Fake subscriptions
+Fake payment confirmations
+Fake job completion
+Fake progress percentages
+Fake AI responses
+Placeholder output files
+Renamed file extensions presented as conversions
+Fake worker status
+Fake provider connection status
+Fake health checks
+Fake success messages
+"Coming Soon" for features advertised as functional
+
+If an integration requires credentials that are not available, implement the real integration architecture and clearly mark the integration as NOT CONFIGURED until credentials are supplied.
+
+Never fabricate successful connections.
+
+If a particular conversion cannot be reliably implemented with the available processing engine, do not fake it.
+
+Only expose genuinely supported functionality.
+
+2. FIRST ACTION — REPOSITORY AUDIT
+
+Before changing significant code, inspect the entire existing repository.
+
+Review:
+
+Framework
+React architecture
+TypeScript configuration
+package manager
+package.json
+existing components
+routes
+API routes
+database
+Prisma/schema
+authentication
+authorization
+storage
+file uploads
+job queues
+workers
+Docker
+environment variables
+existing tools
+existing design system
+existing tests
+deployment configuration
+CI/CD
+logging
+monitoring
+billing
+analytics
+AI integrations
+
+Determine:
+
+What already works
+What is partially implemented
+What is missing
+What is broken
+What is duplicated
+What is unsafe
+What should be reused
+What should be refactored
+What should be replaced
+
+Do not blindly rebuild existing functionality.
+
+Preserve working functionality unless there is a technical reason to change it.
+
+3. PRODUCT VISION
+
+Create an all-in-one digital utility platform.
+
+The product should make common digital tasks extremely simple.
+
+The core experience should be:
+
+USER ARRIVES
+
+↓
+
+SEARCHES FOR A TASK
+
+↓
+
+OPENS TOOL
+
+↓
+
+UPLOADS FILE / ENTERS DATA
+
+↓
+
+CONFIGURES OPTIONS
+
+↓
+
+PROCESSING
+
+↓
+
+REAL RESULT
+
+↓
+
+DOWNLOAD / COPY / SAVE
+
+The platform should feel:
+
+Fast
+Premium
+Reliable
+Simple
+Professional
+Intelligent
+Privacy-conscious
+Accessible
+4. DESIGN DIRECTION
+
+Use an original premium visual language inspired by modern Apple/macOS design principles.
+
+The design should include concepts such as:
+
+Liquid-glass-inspired surfaces
+Translucency
+Depth
+Layered panels
+Soft reflections
+Elegant shadows
+Refined typography
+Large whitespace
+Retina-quality graphics
+Fluid animations
+Sophisticated dark mode
+Premium controls
+Precise spacing
+
+Do NOT clone Apple's UI.
+
+Do NOT use Apple's proprietary assets.
+
+Do NOT claim Apple affiliation.
+
+Do not make the design look like a generic SaaS template.
+
+Avoid:
+
+excessive gradients
+excessive glass
+giant rounded cards everywhere
+rainbow colors
+generic illustrations
+excessive animations
+clutter
+outdated Bootstrap-style UI
+
+The design should feel like a premium modern productivity application.
+
+5. RESPONSIVE DESIGN
+
+The entire application must work on:
+
+4K desktop
+desktop
+laptop
+tablet
+iPhone
+Android
+small mobile screens
+
+Desktop should provide:
+
+advanced navigation
+mega menu
+command search
+multi-column layouts
+large workspaces
+
+Mobile should have:
+
+dedicated responsive layouts
+touch-friendly controls
+compact navigation
+optimized file upload
+sticky actions where appropriate
+mobile-friendly tables
+full-screen tool workspace where appropriate
+
+Do not simply shrink the desktop UI.
+
+6. RECOMMENDED TECHNOLOGY STACK
+
+Use a modern production stack.
+
+Frontend:
+
+Next.js
+React
+TypeScript
+Tailwind CSS
+shadcn/ui where useful
+Framer Motion or equivalent
+Lucide or consistent icon library
+
+Backend:
+
+Next.js server/API architecture or properly separated Node.js backend
+
+Database:
+
+PostgreSQL
+
+ORM:
+
+Prisma or another mature production ORM
+
+Validation:
+
+Zod
+
+Authentication:
+
+Secure session-based authentication
+
+Storage:
+
+S3-compatible object storage
+
+Queue:
+
+Redis
+BullMQ or equivalent
+
+Workers:
+
+Docker-based isolated processing workers
+7. APPLICATION ARCHITECTURE
+
+Use a modular architecture.
+
+Recommended structure:
+
+app
+
+components
+
+features
+
+lib
+
+server
+
+services
+
+workers
+
+processors
+
+providers
+
+db
+
+types
+
+tests
+
+docs
+
+The exact structure may differ based on the existing repository.
+
+Do not force a folder structure if the existing architecture is already sound.
+
+8. PROVIDER ABSTRACTION
+
+Do not hard-code third-party providers throughout the application.
+
+Create provider interfaces.
+
+Examples:
+
+StorageProvider
+
+PaymentProvider
+
+AIProvider
+
+EmailProvider
+
+OCRProvider
+
+OfficeConversionProvider
+
+CreativeConversionProvider
+
+MalwareScanner
+
+AnalyticsProvider
+
+Example:
+
+StorageProvider
+
+LocalStorageProvider
+S3StorageProvider
+
+PaymentProvider
+
+StripeProvider
+FutureProvider
+
+AIProvider
+
+OpenAIProvider
+FutureProvider
+
+OCRProvider
+
+TesseractProvider
+CloudOCRProvider
+
+This allows providers to be replaced without rewriting the application.
+
+9. TOOL REGISTRY
+
+Create a central database/configuration-driven tool registry.
+
+Every tool should contain:
+
+ID
+slug
+name
+category
+description
+icon
+keywords
+SEO title
+SEO description
+supported input formats
+supported output formats
+processing type
+client/server classification
+maximum file size
+usage limits
+premium status
+popularity
+featured status
+version
+active status
+processor/provider
+estimated processing behavior
+
+The frontend should read tool capability information from the registry.
+
+Do not duplicate tool definitions across multiple pages.
+
+10. TOOL ENGINE
+
+Create a reusable Tool Engine.
+
+Every tool should use a consistent lifecycle:
+
+INPUT
+
+↓
+
+VALIDATION
+
+↓
+
+OPTION SELECTION
+
+↓
+
+PROCESSING
+
+↓
+
+OUTPUT VALIDATION
+
+↓
+
+RESULT
+
+↓
+
+DOWNLOAD / COPY / SAVE
+
+Tool states:
+
+Initial
+Drag Over
+File Selected
+Validating
+Uploading
+Queued
+Processing
+Success
+Partial Success
+Error
+Cancelled
+Expired
+Downloading
+Completed
+
+Never fabricate progress.
+
+If exact progress cannot be measured, show an honest indeterminate processing state.
+
+11. GLOBAL NAVIGATION
+
+Create:
+
+Home
+
+Tools
+
+Popular
+
+New
+
+My Tools
+
+Pricing
+
+API
+
+Add:
+
+command search
+mega menu
+keyboard navigation
+responsive mobile navigation
+
+Command shortcut:
+
+Ctrl + K on Windows/Linux
+
+Cmd + K on macOS
+
+12. TOOL CATEGORIES
+
+Create these primary categories:
+
+PDF
+Images
+Video & Audio
+Documents
+Microsoft Office
+Adobe & Creative
+Business
+E-commerce
+Developer
+SEO
+Social Media
+QR & Barcode
+Calculators
+AI
+
+Each category should have:
+
+category landing page
+featured tools
+popular tools
+newest tools
+search
+filters
+related tools
+useful SEO content
+FAQ
+13. HOMEPAGE
+
+Create a premium homepage.
+
+Hero heading:
+
+Powerful tools for everyday work.
+
+Subtitle:
+
+Convert, compress, create, calculate and simplify — all in one place.
+
+Search placeholder:
+
+What do you need to do?
+
+Quick actions:
+
+Compress PDF
+Convert Image
+Create Invoice
+Convert Word
+Generate QR
+Calculate Profit
+
+Homepage sections:
+
+Hero
+Popular Tools
+Categories
+Most Used
+Recently Added
+Tools for Business
+Tools for Developers
+Tools for Designers
+Tools for E-commerce
+Why Use Us
+Privacy
+Pricing
+FAQ
+14. PDF TOOLS
+
+Implement real PDF functionality.
+
+Conversion:
+
+PDF → Word
+PDF → Excel
+PDF → PowerPoint
+PDF → JPG
+PDF → PNG
+PDF → Text
+PDF → HTML
+
+Manipulation:
+
+Merge PDF
+Split PDF
+Rotate PDF
+Extract PDF Pages
+Delete PDF Pages
+Reorder PDF Pages
+PDF Page Numberer
+PDF Watermark
+
+Optimization:
+
+PDF Compressor
+
+Security:
+
+PDF Password Protection
+PDF Unlock only when legitimate password access is supplied
+
+OCR:
+
+Scanned PDF → Text
+Scanned PDF → Word
+Scanned PDF → Excel
+
+Every output must be validated.
+
+15. IMAGE TOOLS
+
+Implement:
+
+JPG → PNG
+PNG → JPG
+JPG → WebP
+PNG → WebP
+WebP → JPG
+HEIC → JPG
+SVG → PNG
+ICO → PNG
+Image → PDF
+Image Compressor
+Image Resizer
+Image Cropper
+Image DPI utility
+EXIF remover
+Image Watermark
+Favicon Generator
+Social Media Image Resizer
+Passport Photo utility
+Background Removal where genuinely supported
+
+Show actual:
+
+original file size
+output file size
+compression savings
+original dimensions
+output dimensions
+16. MICROSOFT OFFICE
+
+Create:
+
+/tools/office
+
+Support genuinely available formats.
+
+Word:
+
+DOC → DOCX
+DOCX → PDF
+DOCX → JPG
+DOCX → PNG
+DOCX → TXT
+DOCX → HTML
+DOCX → RTF
+DOCX ↔ ODT
+
+Excel:
+
+XLS → XLSX
+XLSX → PDF
+XLSX → CSV
+CSV → XLSX
+XLSX → JSON
+XLSX → XML
+XLSX → HTML
+XLSX → TXT
+XLSX ↔ ODS
+
+PowerPoint:
+
+PPT → PPTX
+PPTX → PDF
+PPTX → JPG
+PPTX → PNG
+PPTX → Text
+PPTX → HTML
+PPTX ↔ ODP
+
+Office utilities:
+
+DOCX Merger
+DOCX Splitter
+Word Counter
+Excel Sheet Merger
+Excel Sheet Splitter
+Spreadsheet Cleaner
+Office File Preview
+
+Office → PDF hub:
+
+/tools/office-to-pdf
+
+Support:
+
+Word → PDF
+Excel → PDF
+PowerPoint → PDF
+
+Only show conversions that the actual installed provider can perform.
+
+17. PDF → OFFICE
+
+Implement:
+
+PDF → Word
+PDF → Excel
+PDF → PowerPoint
+
+Add OCR architecture for scanned PDFs.
+
+Detect whether PDF contains:
+
+selectable text
+scanned images
+mixed content
+
+Do not promise perfect reconstruction.
+
+18. OFFICE SECURITY
+
+Detect:
+
+DOCM
+XLSM
+PPTM
+
+Never execute macros.
+
+Never execute embedded scripts.
+
+Detect encrypted/password-protected Office documents.
+
+Do not crack passwords.
+
+If a password is supplied and the processing engine legitimately supports it, allow processing.
+
+Clearly indicate whether macros were:
+
+preserved
+removed
+unsupported
+19. ADOBE & CREATIVE
+
+Create:
+
+/tools/adobe
+
+Support only genuine capabilities.
+
+Photoshop:
+
+PSD → PNG
+PSD → JPG
+PSD → WebP
+PSD → PDF
+PSD Preview
+Layer information where supported
+
+Illustrator:
+
+AI → PDF
+AI → SVG
+AI → PNG
+AI → JPG
+AI Preview
+
+InDesign:
+
+INDD → PDF where supported
+IDML → PDF where supported
+preview/inspection where supported
+
+XD:
+
+XD → PDF where supported
+asset extraction where supported
+preview where supported
+
+Creative utilities:
+
+metadata inspection
+dimensions
+color mode
+page/artboard count
+layer count
+preview
+
+Never rename an extension and call it a conversion.
+
+20. CREATIVE ENGINE
+
+Create:
+
+CreativeConversionEngine
+
+Provider architecture:
+
+LocalCreativeProvider
+OpenSourceCreativeProvider where appropriate
+ExternalCreativeProvider
+
+Capability states:
+
+Supported
+Provider Dependent
+Unsupported
+Temporarily Unavailable
+
+The frontend must dynamically show available conversions.
+
+21. VIDEO & AUDIO
+
+Implement:
+
+Video Compressor
+Video Converter
+Video → GIF
+GIF → MP4
+Audio Compressor
+MP3 → WAV
+WAV → MP3
+Audio Extraction
+Subtitle Converter
+SRT → VTT
+VTT → SRT
+Subtitle Editor
+Video Metadata Inspector
+Audio Metadata Inspector
+
+Use FFmpeg or another appropriate real processing engine.
+
+Heavy media jobs must run through workers.
+
+22. DOCUMENT GENERATORS
+
+Create:
+
+Invoice Generator
+Quotation Generator
+Receipt Generator
+Purchase Order
+Proforma Invoice
+Salary Slip
+Business Letter
+Certificate Generator
+
+Allow:
+
+company information
+logo
+address
+customer
+line items
+quantity
+price
+discount
+taxes
+currency
+notes
+branding
+
+Output:
+
+PDF
+DOCX where supported
+
+Do not hardcode company information.
+
+23. BUSINESS TOOLS
+
+Create:
+
+Percentage Calculator
+Discount Calculator
+Profit Margin Calculator
+Markup Calculator
+ROI Calculator
+Break-even Calculator
+Commission Calculator
+VAT Calculator
+GST Calculator
+Sales Tax Calculator
+Salary Calculator
+Invoice Calculator
+Currency Converter
+Loan Calculator
+EMI Calculator
+
+Every calculator must have:
+
+validated inputs
+correct formulas
+result
+calculation breakdown
+copy
+reset
+24. E-COMMERCE TOOLS
+
+Create:
+
+Product Profit Calculator
+
+Inputs:
+
+product cost
+selling price
+marketplace commission
+payment fee
+shipping
+tax
+
+Outputs:
+
+revenue
+total fees
+net profit
+margin
+markup
+
+Product utilities:
+
+Product Image Resizer
+Product Image Compressor
+Background Removal
+SKU Generator
+Barcode Generator
+Product Description Generator
+Meta Title Generator
+Meta Description Generator
+Marketplace Commission Calculator
+COD Calculator
+Shipping Calculator
+Retail Price Calculator
+Wholesale Price Calculator
+25. DEVELOPER TOOLS
+
+Implement:
+
+JSON Formatter
+JSON Validator
+JSON Minifier
+JSON → CSV
+CSV → JSON
+XML Formatter
+XML Validator
+XML → JSON
+YAML Formatter
+YAML → JSON
+Base64 Encoder
+Base64 Decoder
+URL Encoder
+URL Decoder
+HTML Encoder
+HTML Decoder
+JWT Decoder
+UUID Generator
+Regex Tester
+Unix Timestamp Converter
+Hash Generator
+HEX → RGB
+RGB → HEX
+Markdown → HTML
+HTML → Markdown
+
+Prefer client-side processing for privacy where practical.
+
+26. SEO TOOLS
+
+Implement:
+
+Meta Tag Generator
+Open Graph Generator
+Twitter/X Meta Generator
+UTM Builder
+Robots.txt Generator
+Sitemap Generator
+Schema Markup Generator
+Keyword Density Calculator
+SEO Slug Generator
+Text Analyzer
+
+Outputs must be generated from actual user inputs.
+
+27. SOCIAL MEDIA TOOLS
+
+Implement:
+
+Instagram Image Resizer
+Facebook Image Resizer
+YouTube Thumbnail Resizer
+LinkedIn Image Resizer
+X Image Resizer
+TikTok Image Resizer
+Pinterest Image Resizer
+Social Image Cropper
+YouTube Thumbnail Maker
+Social Caption Formatter
+Hashtag Utility
+28. QR & BARCODE
+
+QR Generator:
+
+Support:
+
+URL
+Text
+Email
+Phone
+Wi-Fi
+vCard
+
+Options:
+
+size
+error correction
+colors
+logo where supported
+
+Output:
+
+PNG
+SVG
+
+Barcode generator:
+
+Support common legitimate barcode formats.
+
+29. YOUTUBE UTILITIES
+
+Implement only legitimate functionality.
+
+Possible:
+
+public thumbnail retrieval
+metadata extraction
+transcript processing where permitted
+subtitle conversion
+thumbnail creator
+thumbnail resizing
+
+Do not implement a generic copyrighted-video ripping system.
+
+30. TEXT TOOLS
+
+Implement:
+
+Word Counter
+Character Counter
+Sentence Counter
+Paragraph Counter
+Reading Time
+Uppercase
+Lowercase
+Title Case
+Remove Duplicate Lines
+Remove Extra Spaces
+Text Sorter
+Text Cleaner
+Text Diff
+Lorem Ipsum Generator
+31. CALCULATOR HUB
+
+Implement:
+
+Percentage
+Age
+Date
+Time
+Discount
+Profit
+Margin
+Markup
+ROI
+EMI
+Loan
+VAT
+GST
+Sales Tax
+Tip
+Currency
+Length
+Weight
+Temperature
+Area
+Volume
+Speed
+Data Storage
+Time Zone
+
+All formulas must be independently tested.
+
+32. GLOBAL SEARCH
+
+Create:
+
+Ctrl/Cmd + K command search.
+
+Search across:
+
+tools
+categories
+keywords
+recent tools
+favorites
+
+Support:
+
+fuzzy search
+typo tolerance
+keyboard navigation
+category labels
+recent tools
+33. AUTHENTICATION
+
+Implement real authentication:
+
+Registration
+Login
+Logout
+Email Verification
+Password Reset
+Password Change
+Session Management
+Account Deletion
+Optional OAuth
+
+Use secure password hashing.
+
+Never store plaintext passwords.
+
+Use secure cookies.
+
+Implement session expiration and revocation.
+
+34. USER ACCOUNT
+
+Authenticated users get:
+
+Profile
+Favorites
+Recent Tools
+Processing History
+Saved Documents
+Saved Templates
+Usage
+Subscription
+API Keys
+35. FILE STORAGE
+
+Use S3-compatible storage in production.
+
+Development may use local storage.
+
+Create:
+
+StorageProvider
+
+Storage lifecycle:
+
+Upload
+
+→ Validate
+
+→ Scan
+
+→ Process
+
+→ Validate Output
+
+→ Store
+
+→ Download
+
+→ Expire
+
+→ Delete
+
+Never store large binary files directly inside PostgreSQL.
+
+36. FILE VALIDATION
+
+Never trust:
+
+extension
+filename
+MIME type supplied by browser
+
+Validate:
+
+extension
+MIME
+magic bytes
+parser validity
+size
+dimensions where appropriate
+
+Example:
+
+A file called:
+
+invoice.pdf
+
+must actually be a valid PDF.
+
+37. FILE SECURITY
+
+Implement:
+
+quarantine
+malware scanning
+safe filenames
+path traversal protection
+resource limits
+ownership checks
+signed URLs
+temporary storage
+automatic deletion
+38. MALWARE SCANNING
+
+Create:
+
+MalwareScanner
+
+Potential providers:
+
+ClamAV
+External scanner
+
+States:
+
+CLEAN
+INFECTED
+SUSPICIOUS
+ERROR
+
+If scanning fails, do not automatically treat the file as clean.
+
+39. REDIS
+
+Use Redis for:
+
+queues
+distributed locks
+rate limiting
+temporary caching
+worker coordination
+
+PostgreSQL remains the authoritative source of business records.
+
+40. JOB QUEUE
+
+Use BullMQ or an equivalent reliable queue.
+
+Queues:
+
+PDF
+Office
+Image
+Media
+OCR
+Creative
+ZIP
+AI
+Cleanup
+Notification
+
+Jobs must contain:
+
+job ID
+user ID
+tool ID
+input asset IDs
+options
+priority
+timestamps
+attempts
+41. JOB STATES
+
+Use:
+
+CREATED
+QUEUED
+VALIDATING
+SCANNING
+PROCESSING
+VALIDATING_OUTPUT
+COMPLETED
+FAILED
+CANCELLED
+EXPIRED
+
+Prevent invalid state transitions.
+
+Never allow jobs to remain permanently stuck in PROCESSING.
+
+42. WORKER ARCHITECTURE
+
+Create isolated workers:
+
+PDF Worker
+Office Worker
+Image Worker
+Media Worker
+OCR Worker
+Creative Worker
+Cleanup Worker
+AI Worker where appropriate
+
+Workers should run independently from the web application.
+
+43. WORKER SECURITY
+
+Workers should:
+
+run with limited privileges
+preferably use non-root users
+use isolated temporary directories
+have CPU limits
+have memory limits
+have timeouts
+clean temporary files
+restrict filesystem access
+avoid arbitrary code execution
+44. PDF ENGINE
+
+Create:
+
+PdfProcessingEngine
+
+Implement genuine:
+
+merge
+split
+rotate
+extract
+delete
+reorder
+watermark
+page numbering
+compression
+rendering
+text extraction
+45. OFFICE ENGINE
+
+Create:
+
+OfficeConversionEngine
+
+Use LibreOffice headless or another legitimate processing provider where appropriate.
+
+The engine must perform actual conversion.
+
+Never copy input to output and change the extension.
+
+46. IMAGE ENGINE
+
+Create:
+
+ImageProcessingEngine
+
+Use appropriate production libraries such as:
+
+Sharp
+ImageMagick
+
+Support:
+
+resize
+crop
+compression
+conversion
+metadata removal
+thumbnails
+watermarking
+47. MEDIA ENGINE
+
+Create:
+
+MediaProcessingEngine
+
+Use FFmpeg or equivalent.
+
+Implement real:
+
+codec conversion
+compression
+resolution changes
+bitrate changes
+GIF conversion
+audio extraction
+subtitle handling
+48. OCR ENGINE
+
+Create:
+
+OCREngine
+
+Providers:
+
+Tesseract
+Optional cloud OCR provider
+
+Support:
+
+English
+Urdu
+Arabic
+additional languages when configured
+
+Pipeline:
+
+Input
+
+→ preprocessing
+
+→ OCR
+
+→ text extraction
+
+→ optional layout reconstruction
+
+→ output
+
+Never fabricate OCR text.
+
+49. EMAIL
+
+Create:
+
+EmailProvider
+
+Support:
+
+SMTP
+transactional email provider
+
+Emails:
+
+verification
+password reset
+security notification
+subscription
+payment
+API notifications
+
+Use reusable templates.
+
+50. PAYMENTS
+
+Create:
+
+PaymentProvider
+
+Support a production payment provider such as Stripe and architect for additional providers.
+
+Implement:
+
+checkout
+subscriptions
+upgrade
+downgrade
+cancellation
+renewal
+failed payment
+refund
+invoices
+customer portal
+
+Never trust frontend payment status.
+
+51. PAYMENT WEBHOOKS
+
+Webhook processing must include:
+
+signature verification
+idempotency
+event persistence
+retry safety
+duplicate protection
+
+The payment provider webhook must be authoritative for subscription state.
+
+52. ENTITLEMENT SYSTEM
+
+Create:
+
+EntitlementService
+
+Centralize:
+
+file size limits
+processing limits
+daily limits
+monthly limits
+batch processing
+OCR
+API
+history
+priority
+advertisements
+
+Do not hardcode plan rules throughout the frontend.
+
+53. MONETIZATION
+
+Plans:
+
+FREE
+
+basic tools
+limited usage
+smaller file sizes
+advertisements
+
+PRO
+
+no ads
+larger files
+higher limits
+batch processing
+priority processing
+history
+
+BUSINESS
+
+teams
+API
+bulk processing
+high limits
+business functionality
+
+All limits must be enforced server-side.
+
+54. AD SYSTEM
+
+Create an ad provider abstraction.
+
+Potential:
+
+AdSense
+Ad Manager
+future providers
+
+Do not place advertisements:
+
+inside upload controls
+beside destructive buttons
+where they look like application controls
+
+Pro/Business should support ad-free experience according to actual entitlement.
+
+55. AI PLATFORM
+
+Create:
+
+AIProvider
+
+Support:
+
+AI product descriptions
+SEO content
+social captions
+text rewriting
+document summarization
+OCR cleanup
+structured data generation
+
+Implement:
+
+server-side API keys
+usage tracking
+cost tracking
+plan limits
+timeout
+retries
+abuse controls
+
+Never expose AI API keys to the browser.
+
+56. API PLATFORM
+
+Create:
+
+/api/v1
+
+Implement:
+
+API keys
+key creation
+key revocation
+usage
+limits
+rate limiting
+audit logs
+
+Example endpoints:
+
+POST /api/v1/pdf/compress
+
+POST /api/v1/pdf/merge
+
+POST /api/v1/image/compress
+
+POST /api/v1/image/convert
+
+POST /api/v1/office/docx-to-pdf
+
+POST /api/v1/office/xlsx-to-pdf
+
+POST /api/v1/office/pptx-to-pdf
+
+POST /api/v1/office/xlsx-to-csv
+
+POST /api/v1/office/csv-to-xlsx
+
+57. API KEY SECURITY
+
+Do not store API secrets unnecessarily in plaintext.
+
+Use:
+
+hashed secrets
+key prefixes
+revocation
+usage tracking
+last-used timestamps
+
+Never expose secret API keys again after creation unless the security model explicitly requires it.
+
+58. API RATE LIMITING
+
+Rate limit by:
+
+IP
+user
+API key
+endpoint
+subscription plan
+
+Use Redis for distributed rate limiting.
+
+59. API IDEMPOTENCY
+
+Support idempotency keys for operations where duplicate processing could occur.
+
+60. ADMIN PANEL
+
+Create a complete admin system.
+
+Dashboard:
+
+total users
+active users
+tool usage
+jobs
+failures
+storage
+subscriptions
+revenue
+API usage
+
+All values must come from real database records.
+
+61. ADMIN TOOL MANAGEMENT
+
+Admin can manage:
+
+tools
+categories
+descriptions
+SEO metadata
+availability
+limits
+providers
+feature flags
+62. ADMIN JOB MANAGEMENT
+
+Display:
+
+job ID
+user
+tool
+status
+queue
+worker
+duration
+errors
+timestamps
+63. ADMIN INTEGRATION CENTER
+
+Create:
+
+/admin/integrations
+
+Display:
+
+Database
+
+Redis
+
+Storage
+
+PDF Engine
+
+Office Engine
+
+Image Engine
+
+FFmpeg
+
+OCR
+
+Creative
+
+Email
+
+Payments
+
+AI
+
+Analytics
+
+Monitoring
+
+Malware Scanner
+
+Cloudflare/Turnstile
+
+For every provider show:
+
+Configured
+Not Configured
+Connected
+Failed
+Last Checked
+
+Never expose secrets.
+
+Health status must be based on real checks.
+
+64. ANALYTICS
+
+Track real events:
+
+page_view
+tool_view
+tool_start
+upload_started
+upload_completed
+job_created
+job_completed
+job_failed
+download
+signup
+login
+subscription_started
+subscription_cancelled
+API request
+
+Use first-party database events for core business records.
+
+Optionally integrate a product analytics provider.
+
+65. ERROR MONITORING
+
+Integrate a service such as Sentry or equivalent.
+
+Track:
+
+frontend errors
+backend errors
+worker failures
+queue failures
+processor failures
+unexpected exceptions
+
+Never send sensitive secrets.
+
+66. STRUCTURED LOGGING
+
+Production logs should include:
+
+timestamp
+service
+environment
+level
+request ID
+user ID where appropriate
+job ID
+tool ID
+duration
+error code
+
+Never expose sensitive file contents or secrets.
+
+67. REQUEST CORRELATION
+
+Use request IDs and job IDs.
+
+Example:
+
+Request:
+
+REQ-12345
+
+Job:
+
+JOB-AB921
+
+Worker:
+
+OFFICE-03
+
+This allows support staff to trace processing failures.
+
+68. HEALTH CHECKS
+
+Create:
+
+/api/health
+
+/api/ready
+
+/api/health/database
+
+/api/health/redis
+
+/api/health/storage
+
+These endpoints must perform real dependency checks.
+
+Never return "healthy" if the dependency is unavailable.
+
+69. WORKER HEARTBEATS
+
+Workers should report:
+
+worker ID
+queue
+status
+last heartbeat
+current job
+version
+
+Admin should see:
+
+healthy
+idle
+busy
+degraded
+offline
+70. AUTOMATIC CLEANUP
+
+Create scheduled cleanup jobs.
+
+Clean:
+
+expired uploads
+expired outputs
+temporary files
+abandoned jobs
+failed temporary files
+expired sessions
+old logs according to retention
+stale processing directories
+
+Cleanup must be safe and idempotent.
+
+71. STORAGE QUOTAS
+
+Implement:
+
+Anonymous quota
+
+Free quota
+
+Pro quota
+
+Business quota
+
+Enforce limits server-side.
+
+72. CONCURRENCY
+
+Prevent one user from consuming all processing resources.
+
+Use plan-based concurrency.
+
+Example architecture:
+
+Free:
+
+low concurrency
+
+Pro:
+
+higher concurrency
+
+Business:
+
+configurable
+
+The exact limits must be configurable.
+
+73. PRIORITY PROCESSING
+
+Support configurable job priority.
+
+Do not hardcode priority rules across the application.
+
+74. FAILURE HANDLING
+
+If a processing job fails:
+
+Record error
+Clean temporary files
+Release locks
+Update job status
+Notify frontend
+Retry only if appropriate
+Eventually move unrecoverable jobs to dead-letter handling
+
+Do not retry corrupt or unsupported files indefinitely.
+
+75. OUTPUT VALIDATION
+
+Every processor must validate its output.
+
+Check:
+
+file exists
+file size
+MIME
+magic bytes
+parser validity
+expected structure
+expected page/sheet/slide count where applicable
+
+Only after successful validation:
+
+job.status = COMPLETED
+
+76. SECURE DOWNLOADS
+
+Downloads must:
+
+verify ownership
+use signed URLs
+expire
+prevent path traversal
+never expose internal storage paths
+
+Record download events.
+
+77. USER PRIVACY
+
+Create accurate file-retention behavior.
+
+Every file should have:
+
+createdAt
+
+expiresAt
+
+status
+
+Users should be able to delete their files where appropriate.
+
+Deletion must remove:
+
+database record
+storage object
+temporary files
+78. DATABASE MODELS
+
+Use appropriate normalized models such as:
+
+User
+
+Session
+
+Role
+
+Category
+
+Tool
+
+ToolVersion
+
+FileAsset
+
+ProcessingJob
+
+JobEvent
+
+ToolUsage
+
+FavoriteTool
+
+ToolHistory
+
+SavedDocument
+
+Subscription
+
+Plan
+
+Payment
+
+ApiKey
+
+ApiUsage
+
+AnalyticsEvent
+
+AuditLog
+
+SystemSetting
+
+FeatureFlag
+
+ProviderConnection
+
+Worker
+
+Add other models where required.
+
+Use:
+
+indexes
+foreign keys
+unique constraints
+transactions
+proper cascading behavior
+79. ENVIRONMENT VARIABLES
+
+Create/update:
+
+.env.example
+
+Include appropriate configuration for:
+
+DATABASE_URL
+
+AUTH_SECRET
+
+STORAGE_ENDPOINT
+
+STORAGE_REGION
+
+STORAGE_BUCKET
+
+STORAGE_ACCESS_KEY
+
+STORAGE_SECRET_KEY
+
+REDIS_URL
+
+EMAIL_PROVIDER
+
+EMAIL_API_KEY
+
+EMAIL_FROM
+
+PAYMENT_PROVIDER
+
+PAYMENT_SECRET
+
+PAYMENT_WEBHOOK_SECRET
+
+AI_PROVIDER
+
+AI_API_KEY
+
+TURNSTILE_SITE_KEY
+
+TURNSTILE_SECRET_KEY
+
+SENTRY_DSN
+
+ANALYTICS_KEY
+
+Other variables required by the actual implementation.
+
+Never commit production secrets.
+
+80. INTERNATIONALIZATION
+
+Architect for:
+
+English
+Urdu
+Arabic
+Spanish
+
+Start with English.
+
+Do not hardcode user-facing text into business logic.
+
+Support RTL architecture.
+
+81. ACCESSIBILITY
+
+Target WCAG-friendly implementation.
+
+Support:
+
+keyboard navigation
+screen readers
+proper labels
+focus indicators
+semantic HTML
+accessible dialogs
+accessible uploads
+reduced motion
+adequate contrast
+82. DARK MODE
+
+Support:
+
+Light
+Dark
+System
+
+Dark mode must be intentionally designed.
+
+Do not simply invert colors.
+
+83. ANIMATION
+
+Use animation for:
+
+page transitions
+uploads
+processing states
+result transitions
+navigation
+dialogs
+hover states
+
+Respect:
+
+prefers-reduced-motion
+
+Do not animate unnecessarily.
+
+84. SEO
+
+Every genuine tool should have an indexable page.
+
+Examples:
+
+/tools/pdf/compress-pdf
+
+/tools/pdf/pdf-to-word
+
+/tools/image/jpg-to-png
+
+/tools/image/heic-to-jpg
+
+/tools/office/word-to-pdf
+
+/tools/office/excel-to-pdf
+
+/tools/office/powerpoint-to-pdf
+
+/tools/adobe/psd-to-png
+
+/tools/adobe/ai-to-pdf
+
+/tools/developer/json-formatter
+
+/tools/business/profit-calculator
+
+/tools/seo/utm-builder
+
+Implement:
+
+title
+meta description
+canonical
+Open Graph
+structured data
+breadcrumbs
+sitemap
+robots.txt
+FAQ schema where appropriate
+85. SEO CONTENT
+
+Each tool page should include useful content:
+
+What the tool does
+
+How to use it
+
+Supported formats
+
+Limitations
+
+Privacy
+
+FAQ
+
+Related tools
+
+Do not use meaningless keyword stuffing.
+
+86. INTERNAL LINKING
+
+Automatically recommend related tools.
+
+Example:
+
+PDF → Word
+
+Related:
+
+PDF Compressor
+Merge PDF
+PDF → JPG
+PDF → Excel
+PDF → PowerPoint
+
+Use the tool registry to determine relationships where practical.
+
+87. PWA
+
+Prepare architecture for PWA:
+
+manifest
+icons
+installability
+offline support for tools that genuinely work offline
+
+Do not claim offline functionality for server-dependent tools.
+
+88. DOCKER
+
+Create production-ready Docker configuration.
+
+Use:
+
+multi-stage builds
+minimal runtime images
+non-root execution
+health checks
+environment configuration
+
+Development environment may include:
+
+app
+
+postgres
+
+redis
+
+pdf worker
+
+office worker
+
+image worker
+
+media worker
+
+ocr worker
+
+creative worker
+
+cleanup worker
+
+Only include services that are actually used.
+
+89. SECURITY
+
+Implement:
+
+secure authentication
+authorization
+CSRF protection where applicable
+XSS protection
+SQL injection prevention
+input validation
+file validation
+malware scanning
+rate limiting
+secure cookies
+signed URLs
+ownership checks
+audit logging
+worker isolation
+resource limits
+timeout protection
+90. ABUSE PROTECTION
+
+Monitor:
+
+excessive uploads
+excessive failed jobs
+huge files
+repeated expensive operations
+excessive API calls
+suspicious automation
+
+Create configurable abuse controls.
+
+91. BACKUPS
+
+Implement/document:
+
+PostgreSQL:
+
+automated backups
+retention
+restoration testing
+
+Object storage:
+
+lifecycle
+backup/versioning strategy where appropriate
+
+Create disaster-recovery documentation.
+
+92. PERFORMANCE
+
+Optimize:
+
+Core Web Vitals
+initial page load
+JavaScript bundle size
+images
+database queries
+API latency
+worker throughput
+
+Use:
+
+lazy loading
+dynamic imports
+code splitting
+caching where appropriate
+
+Heavy processing libraries should not unnecessarily load into the browser.
+
+93. SCALABILITY
+
+The architecture must support growth from:
+
+10 tools
+
+to:
+
+100 tools
+
+to:
+
+500+ tools
+
+Adding a new tool should not require rewriting:
+
+authentication
+billing
+history
+analytics
+navigation
+file management
+
+A new tool should primarily require:
+
+registry entry
+UI configuration
+processor
+validator
+tests
+94. TOOL VERSIONING
+
+Support tool/processor versions.
+
+Example:
+
+PDF Compressor v1
+
+If processing behavior changes, retain version information where needed.
+
+95. FEATURE FLAGS
+
+Support flags for:
+
+beta tools
+premium tools
+experimental engines
+regional availability
+new processors
+
+Flags must be configuration/database-driven.
+
+96. DOCUMENTATION
+
+Create:
+
+README.md
+
+docs/architecture.md
+
+docs/development.md
+
+docs/tool-development.md
+
+docs/file-processing.md
+
+docs/security.md
+
+docs/deployment.md
+
+docs/api.md
+
+docs/monetization.md
+
+docs/providers.md
+
+Explain how developers add future tools and providers.
+
+97. IMPLEMENTATION PHASES
+
+Build incrementally.
+
+PHASE 1 — Repository Audit & Foundation
+
+Implement:
+
+audit
+architecture
+database
+authentication foundation
+configuration
+core application layout
+PHASE 2 — Premium Design System
+
+Implement:
+
+design system
+responsive layout
+navigation
+command search
+components
+dark mode
+animations
+PHASE 3 — Tool Engine
+
+Implement:
+
+tool registry
+tool pages
+upload engine
+validation
+result system
+file lifecycle
+PHASE 4 — Storage & Job Infrastructure
+
+Implement:
+
+object storage
+Redis
+queues
+workers
+job states
+cleanup
+PHASE 5 — PDF Engine
+
+Implement genuine PDF tools.
+
+PHASE 6 — Image Engine
+
+Implement genuine image tools.
+
+PHASE 7 — Microsoft Office
+
+Implement:
+
+Word
+Excel
+PowerPoint
+Office → PDF
+PDF → Office
+previews
+OCR integration
+PHASE 8 — Adobe & Creative
+
+Implement supported creative operations.
+
+PHASE 9 — Video & Audio
+
+Implement FFmpeg-based tools.
+
+PHASE 10 — Documents & Business
+
+Implement document generators and calculators.
+
+PHASE 11 — Developer / SEO / QR / Social
+
+Implement utility categories.
+
+PHASE 12 — E-commerce Tools
+
+Implement e-commerce utilities.
+
+PHASE 13 — User Accounts
+
+Implement:
+
+history
+favorites
+saved files
+saved templates
+usage
+PHASE 14 — Monetization
+
+Implement:
+
+plans
+payments
+subscriptions
+entitlements
+advertisements
+PHASE 15 — API
+
+Implement:
+
+API keys
+endpoints
+limits
+usage
+documentation
+PHASE 16 — Admin
+
+Implement:
+
+users
+tools
+jobs
+providers
+analytics
+billing
+system health
+PHASE 17 — SEO & Growth
+
+Implement:
+
+tool landing pages
+metadata
+schema
+sitemap
+internal linking
+content architecture
+PHASE 18 — Security / Performance / Production Infrastructure
+
+Implement:
+
+malware scanning
+Cloudflare
+Turnstile
+monitoring
+logging
+backups
+resource limits
+security hardening
+PHASE 19 — Final QA & Production Certification
+
+Perform complete system testing.
+
+98. DEFINITION OF DONE
+
+A feature is NOT complete until:
+
+UI works
+Backend works
+Database works where required
+Real processing works
+Validation works
+Error handling works
+Loading state works
+Success state works
+Mobile works
+Accessibility works
+Security works
+Tests pass
+Real files have been tested
+No mock data remains
+No fake results remain
+No fake success remains
+99. REAL FILE TESTING
+
+Create real test fixtures.
+
+PDF:
+
+normal PDF
+multi-page PDF
+scanned PDF
+corrupted PDF
+encrypted/password-protected PDF
+
+Office:
+
+DOC
+DOCX
+DOCM
+XLS
+XLSX
+XLSM
+CSV
+ODS
+PPT
+PPTX
+PPSX
+ODP
+
+Images:
+
+JPG
+PNG
+WebP
+HEIC
+SVG
+ICO
+transparent image
+large image
+
+Media:
+
+MP4
+MOV
+MKV
+MP3
+WAV
+GIF
+
+Creative:
+
+Only test formats genuinely supported by the installed engines.
+
+100. END-TO-END TESTING
+
+Example:
+
+PDF Compressor:
+
+Open tool
+
+→ upload real PDF
+
+→ validate
+
+→ scan
+
+→ queue
+
+→ worker
+
+→ process
+
+→ validate output
+
+→ store
+
+→ download
+
+→ verify downloaded PDF
+
+Repeat equivalent tests for:
+
+Office
+Image
+Media
+OCR
+Creative
+101. FAILURE TESTING
+
+Intentionally test:
+
+database unavailable
+Redis unavailable
+storage unavailable
+worker crash
+processing timeout
+corrupt file
+invalid file
+unsupported conversion
+invalid payment webhook
+expired session
+expired download
+rate limit exceeded
+
+The system must fail safely.
+
+102. PERFORMANCE TESTING
+
+Test:
+
+concurrent uploads
+concurrent processing
+large files
+multiple workers
+queue depth
+database performance
+storage performance
+
+Record actual benchmark results.
+
+Never invent performance numbers.
+
+103. FINAL BUILD VERIFICATION
+
+Run the repository's actual commands for:
+
+TypeScript
+lint
+unit tests
+integration tests
+E2E tests
+production build
+
+Do not hide errors.
+
+Do not suppress failing tests merely to obtain a green build.
+
+104. FINAL CERTIFICATION
+
+Use one of:
+
+CERTIFIED
+
+CONDITIONALLY CERTIFIED
+
+NOT CERTIFIED
+
+Only use CERTIFIED if all required functionality for the completed scope has actually been verified.
+
+If external credentials are missing, identify them as external configuration requirements rather than pretending the integration is operational.
+
+105. FINAL REPORT
+
+At completion provide:
+
+Architecture
+
+Describe the actual architecture.
+
+Implemented Tools
+
+List genuinely functional tools.
+
+Database
+
+List implemented models and migrations.
+
+Storage
+
+Describe actual storage implementation.
+
+Workers
+
+List:
+
+queues
+workers
+processors
+Integrations
+
+Report:
+
+Database
+Redis
+Storage
+PDF
+Office
+Image
+Media
+OCR
+Creative
+Email
+Payment
+AI
+Analytics
+Monitoring
+Malware scanner
+Cloudflare/Turnstile
+
+For each:
+
+CONFIGURED
+
+CONNECTED
+
+READY
+
+PARTIAL
+
+NOT CONFIGURED
+
+FAILED
+
+Use actual status only.
+
+Testing
+
+Report exact numbers:
+
+Unit:
+
+Integration:
+
+E2E:
+
+Real File:
+
+Security:
+
+Build:
+
+Typecheck:
+
+Lint:
+
+Known Limitations
+
+List genuine limitations.
+
+External Configuration Required
+
+List credentials or infrastructure still required.
+
+106. CRITICAL PRINCIPLE
+
+Do not measure the quality of the platform by how many tool cards appear on the homepage.
+
+Measure it by how many tools actually work reliably.
+
+50 real tools are better than 500 fake tools.
+
+Every advertised conversion must correspond to a real processing implementation.
+
+Every success state must correspond to a real successful operation.
+
+Every dashboard number must come from real data.
+
+Every payment status must come from real payment events.
+
+Every worker status must come from real worker health.
+
+Every analytics number must come from recorded events.
+
+Every file download must point to a real output.
+
+107. START NOW
+
+Do NOT begin by creating fake tool pages.
+
+First inspect the existing repository.
+
+Then provide:
+
+Current-state audit
+Architecture assessment
+Existing functionality
+Missing functionality
+Technical risks
+Dependency requirements
+External integrations required
+Database changes required
+Worker architecture
+Processing-engine architecture
+Security plan
+Implementation roadmap
+
+Then begin implementation incrementally.
+
+After each major phase:
+
+run tests
+fix failures
+verify functionality
+document changes
+create a checkpoint/commit where appropriate
+
+Never silently ignore errors.
+
+Never claim incomplete functionality is complete.
+
+Build the actual production platform.
