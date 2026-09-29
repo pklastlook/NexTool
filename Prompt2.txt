@@ -1,0 +1,2269 @@
+# PHASE 18 — PRODUCTION INTEGRATIONS, PROCESSING INFRASTRUCTURE & EXTERNAL SERVICES
+
+## ROLE
+
+Act as a senior:
+
+* Cloud Architect
+* Full-Stack Engineer
+* DevOps Engineer
+* Security Engineer
+* Distributed Systems Engineer
+* File Processing Engineer
+* Database Engineer
+* QA Engineer
+
+You are continuing development of the existing **Premium All-in-One Online Tools Platform**.
+
+This phase is specifically responsible for turning the existing application architecture into a **real production-capable processing platform**.
+
+This is NOT a UI-only phase.
+
+This phase must establish the infrastructure required for:
+
+* real file uploads
+* real file storage
+* real file processing
+* background jobs
+* worker isolation
+* OCR
+* Office conversion
+* PDF processing
+* image processing
+* media processing
+* authentication email
+* payments
+* AI
+* analytics
+* monitoring
+* security
+* automated cleanup
+* production observability
+
+---
+
+# 1. ABSOLUTE RULES
+
+These rules are mandatory.
+
+## DO NOT
+
+* create fake integrations
+* create mocked provider responses
+* create dummy storage
+* fake payment status
+* fake job completion
+* fake worker status
+* fake analytics
+* fake conversion results
+* fake API responses
+* hardcode production credentials
+* commit secrets
+* expose API keys to the browser
+* claim a provider is integrated when it is not
+* claim a conversion is supported when the actual engine cannot perform it
+
+If credentials are unavailable:
+
+1. implement the integration architecture
+2. create environment variables
+3. create setup documentation
+4. create a clear configuration status
+5. do not fake successful connection
+
+---
+
+# 2. FIRST TASK — EXISTING SYSTEM AUDIT
+
+Before modifying the project, inspect the complete repository.
+
+Audit:
+
+* package.json
+* lockfile
+* framework
+* TypeScript
+* database
+* Prisma/schema
+* authentication
+* existing API
+* existing tool registry
+* existing upload system
+* existing storage
+* existing job system
+* existing workers
+* existing Docker configuration
+* existing environment configuration
+* existing billing
+* existing analytics
+* existing AI
+* existing monitoring
+* existing tests
+* existing deployment configuration
+
+Determine:
+
+### Already implemented
+
+### Partially implemented
+
+### Missing
+
+### Broken
+
+### Unsafe
+
+### Needs replacement
+
+Do not duplicate existing functionality.
+
+Produce an implementation plan based on the actual repository.
+
+---
+
+# 3. TARGET ARCHITECTURE
+
+Establish this architecture:
+
+```text
+                         INTERNET
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ Cloudflare    │
+                    │ DNS / WAF/CDN │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ Next.js App    │
+                    │ Web + API      │
+                    └───────┬───────┘
+                            │
+             ┌──────────────┼──────────────┐
+             │              │              │
+             ▼              ▼              ▼
+        PostgreSQL        Redis       Object Storage
+             │              │              │
+             │              ▼              │
+             │        ┌────────────┐        │
+             │        │ Job Queue  │        │
+             │        └──────┬─────┘        │
+             │               │              │
+             │       ┌───────┼────────┐     │
+             │       │       │        │     │
+             ▼       ▼       ▼        ▼     │
+           Jobs    PDF     Office   Media   │
+                   Worker   Worker   Worker │
+                     │        │       │     │
+                     ▼        ▼       ▼     │
+                   PDF Lib LibreOffice FFmpeg
+                                             │
+                  ┌──────────────────────────┘
+                  │
+                  ▼
+             Output Validation
+                  │
+                  ▼
+             Object Storage
+                  │
+                  ▼
+             Secure Download
+```
+
+Additional workers:
+
+```text
+OCR Worker
+Image Worker
+Creative Worker
+Cleanup Worker
+Notification Worker
+```
+
+---
+
+# 4. PROVIDER ABSTRACTION LAYER
+
+Do not tightly couple business logic to third-party services.
+
+Create interfaces.
+
+## Storage
+
+```text
+StorageProvider
+```
+
+Methods should support:
+
+* upload
+* multipart upload
+* download
+* delete
+* exists
+* metadata
+* signed upload URL
+* signed download URL
+* list where required
+
+Providers:
+
+```text
+LocalStorageProvider
+S3StorageProvider
+```
+
+---
+
+# 5. DATABASE INTEGRATION
+
+Connect the application to PostgreSQL.
+
+Use the existing database architecture if already present.
+
+Create/update migrations for:
+
+```text
+User
+Session
+FileAsset
+ProcessingJob
+JobEvent
+Tool
+ToolVersion
+ToolUsage
+Subscription
+Plan
+Payment
+ApiKey
+ApiUsage
+AnalyticsEvent
+AuditLog
+SystemSetting
+FeatureFlag
+ProviderConnection
+Worker
+```
+
+Use:
+
+* foreign keys
+* indexes
+* unique constraints
+* timestamps
+* appropriate deletion behavior
+
+Never store binary files inside normal relational records.
+
+---
+
+# 6. DATABASE CONNECTION MANAGEMENT
+
+Implement production-safe connection handling.
+
+Support:
+
+* connection pooling
+* graceful shutdown
+* transaction handling
+* retry strategy where appropriate
+* timeout handling
+
+Do not create a new database connection for every request unnecessarily.
+
+---
+
+# 7. OBJECT STORAGE
+
+Implement S3-compatible object storage.
+
+Environment configuration:
+
+```text
+STORAGE_ENDPOINT
+STORAGE_REGION
+STORAGE_BUCKET
+STORAGE_ACCESS_KEY
+STORAGE_SECRET_KEY
+STORAGE_FORCE_PATH_STYLE
+```
+
+Support separate logical prefixes:
+
+```text
+uploads/
+outputs/
+temporary/
+quarantine/
+exports/
+```
+
+Keep buckets private.
+
+---
+
+# 8. SIGNED URL SYSTEM
+
+Never expose storage credentials.
+
+Implement:
+
+```text
+createUploadUrl()
+createDownloadUrl()
+```
+
+Signed URLs must:
+
+* expire
+* be scoped
+* reference the correct object
+* respect user ownership
+* never expose another user's files
+
+---
+
+# 9. FILE ASSET MODEL
+
+Every uploaded file must receive an internal asset ID.
+
+Store:
+
+```text
+id
+ownerId
+originalName
+safeName
+mimeType
+detectedMimeType
+extension
+size
+checksum
+storageKey
+status
+scanStatus
+createdAt
+expiresAt
+```
+
+Never trust the client-provided MIME type.
+
+---
+
+# 10. FILE SIGNATURE VALIDATION
+
+Validate files using actual binary signatures/magic bytes.
+
+Example:
+
+A file called:
+
+```text
+invoice.pdf
+```
+
+must actually be a PDF.
+
+Do not accept an arbitrary file merely because:
+
+```text
+filename.endsWith(".pdf")
+```
+
+Perform:
+
+* extension validation
+* MIME validation
+* magic-byte validation
+* parser validation where appropriate
+
+---
+
+# 11. QUARANTINE SYSTEM
+
+Uploaded files should initially enter:
+
+```text
+QUARANTINE
+```
+
+Pipeline:
+
+```text
+Upload
+ ↓
+Quarantine
+ ↓
+Validate
+ ↓
+Malware Scan
+ ↓
+Approved?
+ ├── YES → Processing
+ └── NO → Reject/Delete
+```
+
+Never process rejected files.
+
+---
+
+# 12. MALWARE SCANNING ABSTRACTION
+
+Create:
+
+```text
+MalwareScanner
+```
+
+with provider architecture.
+
+Example:
+
+```text
+ClamAVProvider
+ExternalScannerProvider
+```
+
+The scanner should return:
+
+```text
+CLEAN
+INFECTED
+SUSPICIOUS
+ERROR
+```
+
+Do not mark a file clean if scanning failed.
+
+---
+
+# 13. REDIS
+
+Integrate Redis.
+
+Environment:
+
+```text
+REDIS_URL
+```
+
+Redis should support:
+
+* job queues
+* rate limiting
+* short-lived cache
+* locks
+* worker coordination
+
+Do not store permanent business records only in Redis.
+
+PostgreSQL remains authoritative.
+
+---
+
+# 14. BULLMQ / JOB QUEUE
+
+Implement real queues.
+
+Create separate queues where useful:
+
+```text
+pdf
+office
+image
+media
+ocr
+creative
+zip
+cleanup
+notification
+ai
+```
+
+Each job should contain:
+
+```text
+jobId
+userId
+toolId
+inputAssetIds
+options
+priority
+createdAt
+attempts
+```
+
+---
+
+# 15. JOB STATE MACHINE
+
+Use strict states:
+
+```text
+CREATED
+QUEUED
+VALIDATING
+SCANNING
+PROCESSING
+VALIDATING_OUTPUT
+COMPLETED
+FAILED
+CANCELLED
+EXPIRED
+```
+
+Illegal state transitions must be prevented.
+
+Example:
+
+```text
+COMPLETED → PROCESSING
+```
+
+must not happen.
+
+---
+
+# 16. JOB EVENTS
+
+Store important job events.
+
+Example:
+
+```text
+job.created
+job.queued
+job.started
+job.processing
+job.output_validated
+job.completed
+job.failed
+job.cancelled
+```
+
+This enables:
+
+* debugging
+* audit trails
+* analytics
+* customer support
+
+---
+
+# 17. WORKER ARCHITECTURE
+
+Create separate worker processes/containers.
+
+At minimum:
+
+```text
+worker-pdf
+worker-office
+worker-image
+worker-media
+worker-ocr
+worker-creative
+worker-cleanup
+```
+
+Workers must not expose public HTTP endpoints unnecessarily.
+
+---
+
+# 18. WORKER SECURITY
+
+Workers must:
+
+* run with non-root users where possible
+* have temporary working directories
+* have restricted permissions
+* enforce resource limits
+* enforce processing timeout
+* clean temporary files
+* avoid executing arbitrary uploaded scripts
+
+Use isolated containers.
+
+---
+
+# 19. PDF PROCESSING ENGINE
+
+Integrate genuine PDF libraries/tools.
+
+Implement provider abstraction:
+
+```text
+PdfEngine
+```
+
+Operations:
+
+* merge
+* split
+* rotate
+* extract
+* delete pages
+* watermark
+* page numbering
+* compression
+* rendering
+* text extraction
+
+Validate every output.
+
+---
+
+# 20. OFFICE PROCESSING ENGINE
+
+Integrate LibreOffice headless or another legitimate conversion engine.
+
+Create:
+
+```text
+OfficeConversionEngine
+```
+
+Support where the actual environment permits:
+
+* DOC/DOCX
+* XLS/XLSX
+* PPT/PPTX
+* ODT
+* ODS
+* ODP
+
+Examples:
+
+```text
+DOCX → PDF
+XLSX → PDF
+PPTX → PDF
+DOC → DOCX
+XLS → XLSX
+PPT → PPTX
+CSV → XLSX
+XLSX → CSV
+ODT → DOCX
+ODS → XLSX
+ODP → PPTX
+```
+
+Before enabling a conversion:
+
+```text
+checkCapability(inputFormat, outputFormat)
+```
+
+If unsupported:
+
+```text
+return unsupported
+```
+
+Do not fake it.
+
+---
+
+# 21. OFFICE MACRO SECURITY
+
+Detect:
+
+* DOCM
+* XLSM
+* PPTM
+
+Never execute macros.
+
+Record:
+
+```text
+macroDetected
+macroPreserved
+macroRemoved
+```
+
+depending on actual processing behavior.
+
+---
+
+# 22. IMAGE ENGINE
+
+Create:
+
+```text
+ImageProcessingEngine
+```
+
+Use appropriate real engines such as:
+
+* Sharp
+* ImageMagick
+
+Support:
+
+* resize
+* crop
+* compression
+* conversion
+* metadata removal
+* DPI-related operations where technically meaningful
+* watermark
+* thumbnail generation
+
+---
+
+# 23. IMAGE SECURITY
+
+Images can contain malicious metadata or unexpected payloads.
+
+Sanitize/re-encode where appropriate.
+
+Never trust:
+
+* EXIF
+* filename
+* MIME
+* dimensions
+
+Apply maximum:
+
+* pixel count
+* memory usage
+* processing duration
+
+---
+
+# 24. FFmpeg MEDIA ENGINE
+
+Create:
+
+```text
+MediaProcessingEngine
+```
+
+Integrate FFmpeg for:
+
+* video compression
+* video conversion
+* video → GIF
+* GIF → MP4
+* audio extraction
+* MP3/WAV conversion
+* subtitle operations
+
+Validate:
+
+* codec
+* duration
+* dimensions
+* audio streams
+* output existence
+
+---
+
+# 25. MEDIA RESOURCE PROTECTION
+
+Reject or safely handle:
+
+* absurd resolutions
+* huge frame counts
+* malformed media
+* excessive duration
+* unsupported codecs
+
+Implement:
+
+* timeout
+* CPU limit
+* memory limit
+* output-size limit
+
+---
+
+# 26. OCR ENGINE
+
+Create:
+
+```text
+OCREngine
+```
+
+Providers:
+
+```text
+TesseractProvider
+CloudOCRProvider
+```
+
+Support:
+
+* English
+* Urdu
+* Arabic
+* additional configured languages
+
+OCR pipeline:
+
+```text
+Input
+ ↓
+Image/PDF preprocessing
+ ↓
+OCR
+ ↓
+Text extraction
+ ↓
+Optional layout reconstruction
+ ↓
+Output generation
+```
+
+Never claim perfect layout reconstruction.
+
+---
+
+# 27. CREATIVE ENGINE
+
+Create:
+
+```text
+CreativeConversionEngine
+```
+
+Providers:
+
+```text
+LocalCreativeProvider
+ExternalCreativeProvider
+```
+
+Support only conversions that can actually be performed.
+
+Potential formats:
+
+* PSD
+* AI
+* IDML
+* INDD
+* XD
+
+The tool registry must dynamically know:
+
+```text
+supported
+provider-dependent
+unsupported
+```
+
+---
+
+# 28. CREATIVE FILE PREVIEW
+
+Where supported, extract:
+
+* dimensions
+* color mode
+* page/artboard count
+* layer count
+* metadata
+* preview image
+
+If a preview cannot be generated:
+
+show an honest error.
+
+Do not generate a fake thumbnail.
+
+---
+
+# 29. EMAIL PROVIDER
+
+Create:
+
+```text
+EmailProvider
+```
+
+Support:
+
+* SMTP provider
+* transactional email provider
+
+Implement:
+
+* verification email
+* password reset
+* security notification
+* billing email
+* API notification
+
+Use templates.
+
+Never put secrets in frontend code.
+
+---
+
+# 30. AUTHENTICATION HARDENING
+
+Verify:
+
+* secure password hashing
+* session expiration
+* session revocation
+* secure cookies
+* CSRF protection where required
+* login rate limiting
+* password reset token expiration
+* verification token expiration
+
+Implement account lock/risk controls carefully without creating denial-of-service vulnerabilities.
+
+---
+
+# 31. CLOUDFLARE
+
+Prepare the application for Cloudflare.
+
+Document:
+
+* DNS
+* TLS
+* proxy
+* WAF
+* caching
+* rate limiting
+
+Do not assume Cloudflare-specific features are active unless credentials/configuration confirm it.
+
+---
+
+# 32. TURNSTILE
+
+Add Turnstile to high-abuse endpoints where appropriate:
+
+* signup
+* login
+* password reset
+* anonymous high-volume processing
+* contact/feedback
+
+Validation must happen server-side.
+
+Never trust only the browser widget.
+
+---
+
+# 33. RATE LIMITING
+
+Create centralized:
+
+```text
+RateLimitService
+```
+
+Rate limit by:
+
+* IP
+* user
+* API key
+* endpoint
+* plan
+
+Use Redis for distributed rate limiting.
+
+---
+
+# 34. PAYMENT PROVIDER
+
+Create:
+
+```text
+PaymentProvider
+```
+
+Provider implementation may initially use Stripe or another configured provider.
+
+Support:
+
+* checkout
+* subscription
+* cancellation
+* renewal
+* failed payment
+* refund
+* invoices
+* customer portal
+
+---
+
+# 35. PAYMENT WEBHOOKS
+
+Create secure webhook handling.
+
+Requirements:
+
+* signature verification
+* idempotency
+* event persistence
+* retry-safe processing
+* duplicate event protection
+
+Never trust:
+
+```text
+?payment=success
+```
+
+as proof of payment.
+
+The payment provider webhook must update subscription state.
+
+---
+
+# 36. ENTITLEMENT ENGINE
+
+Create:
+
+```text
+EntitlementService
+```
+
+It determines:
+
+* maximum file size
+* daily usage
+* monthly usage
+* batch access
+* OCR access
+* API access
+* history retention
+* priority processing
+* ads/no ads
+
+Do not hardcode these rules across UI components.
+
+---
+
+# 37. AI PROVIDER
+
+Create:
+
+```text
+AIProvider
+```
+
+Support provider abstraction.
+
+Implement:
+
+* server-side API keys
+* usage tracking
+* token/cost tracking
+* plan limits
+* timeout
+* retry
+* content validation
+
+---
+
+# 38. ANALYTICS
+
+Create first-party event storage.
+
+Track:
+
+```text
+tool_view
+tool_start
+upload_started
+upload_completed
+job_created
+job_completed
+job_failed
+download
+signup
+login
+subscription_started
+subscription_cancelled
+api_request
+```
+
+Never fabricate metrics.
+
+Admin dashboards must query real events.
+
+---
+
+# 39. ERROR MONITORING
+
+Integrate an error-monitoring provider such as Sentry or equivalent.
+
+Capture:
+
+* frontend exceptions
+* API errors
+* worker errors
+* conversion failures
+* queue failures
+* unexpected exceptions
+
+Never send:
+
+* passwords
+* API secrets
+* private file contents
+* payment secrets
+
+unless explicitly required and securely handled.
+
+---
+
+# 40. STRUCTURED LOGGING
+
+Create structured application logs.
+
+Example:
+
+```text
+timestamp
+service
+environment
+level
+requestId
+userId
+jobId
+toolId
+message
+duration
+errorCode
+```
+
+Use JSON logs in production.
+
+---
+
+# 41. REQUEST CORRELATION
+
+Every request should receive a request ID.
+
+Processing jobs should also have job IDs.
+
+Example:
+
+```text
+Request: REQ-71F2
+Job: JOB-82A91
+Worker: OFFICE-03
+```
+
+This allows support staff to trace failures.
+
+---
+
+# 42. HEALTH CHECKS
+
+Create:
+
+```text
+/api/health
+/api/ready
+/api/health/database
+/api/health/redis
+/api/health/storage
+```
+
+Health checks must perform real checks.
+
+Do not return:
+
+```json
+{
+  "status": "ok"
+}
+```
+
+if the database/queue/storage is actually unavailable.
+
+---
+
+# 43. WORKER HEARTBEATS
+
+Workers should report:
+
+* worker ID
+* queue
+* status
+* last heartbeat
+* current job
+* version
+
+Admin should be able to see whether workers are:
+
+* healthy
+* idle
+* busy
+* degraded
+* offline
+
+---
+
+# 44. AUTOMATIC CLEANUP
+
+Implement scheduled cleanup.
+
+Delete:
+
+* expired uploads
+* expired outputs
+* abandoned jobs
+* temporary files
+* expired signed assets
+* stale sessions
+* old logs according to retention rules
+
+Cleanup must be idempotent.
+
+---
+
+# 45. BACKUP SYSTEM
+
+Document and implement:
+
+### PostgreSQL
+
+* automated backup
+* retention
+* restoration procedure
+
+### Object Storage
+
+* lifecycle policy
+* backup/versioning strategy where appropriate
+
+Create a documented disaster recovery procedure.
+
+Do not claim backups are working unless verified.
+
+---
+
+# 46. API SECURITY
+
+For `/api/v1`:
+
+* authentication
+* API keys
+* rate limiting
+* request validation
+* file limits
+* usage accounting
+* audit logs
+
+Every API request should be associated with:
+
+* user
+* API key
+* tool
+* endpoint
+* job
+
+---
+
+# 47. API IDEMPOTENCY
+
+For operations that can safely be retried, support idempotency keys.
+
+Example:
+
+```text
+Idempotency-Key: abc123
+```
+
+Prevent accidental duplicate processing.
+
+---
+
+# 48. STORAGE QUOTAS
+
+Implement:
+
+* anonymous quota
+* free quota
+* pro quota
+* business quota
+
+Enforce server-side.
+
+Display remaining usage honestly.
+
+---
+
+# 49. CONCURRENCY CONTROL
+
+Prevent a single user from consuming all workers.
+
+Example:
+
+```text
+Free → low concurrency
+Pro → higher concurrency
+Business → configurable
+```
+
+Do not hardcode values throughout the application.
+
+Use plan entitlements.
+
+---
+
+# 50. PRIORITY QUEUES
+
+Implement job priorities.
+
+Example:
+
+```text
+Business
+   ↓
+Pro
+   ↓
+Free
+```
+
+The exact policy should be configuration-driven.
+
+---
+
+# 51. FAILED JOB HANDLING
+
+A failed job must:
+
+1. record error
+2. clean temporary files
+3. release locks
+4. update user-visible state
+5. optionally retry
+6. eventually enter dead-letter handling
+
+Never leave jobs permanently stuck in PROCESSING.
+
+---
+
+# 52. RETRY POLICY
+
+Retry only errors that are reasonably transient.
+
+Do NOT repeatedly retry:
+
+* corrupt files
+* unsupported formats
+* invalid parameters
+* malicious files
+
+Use exponential backoff.
+
+---
+
+# 53. OUTPUT VALIDATION
+
+Every processor must pass through:
+
+```text
+OutputValidator
+```
+
+Verify:
+
+* output exists
+* file size
+* MIME
+* signature
+* parser validity
+* expected structure
+
+Only then:
+
+```text
+job.status = COMPLETED
+```
+
+---
+
+# 54. REAL DOWNLOAD SYSTEM
+
+Downloads must:
+
+* use secure URLs
+* verify ownership
+* respect expiration
+* prevent path traversal
+* never expose storage filesystem paths
+
+Record download events.
+
+---
+
+# 55. USER PRIVACY
+
+Implement accurate retention behavior.
+
+The application must know:
+
+```text
+asset.createdAt
+asset.expiresAt
+```
+
+Users should be able to delete files manually where supported.
+
+Deletion should remove:
+
+* database metadata
+* storage object
+* temporary processing files
+
+---
+
+# 56. ENVIRONMENT MANAGEMENT
+
+Create/update:
+
+`.env.example`
+
+Group variables:
+
+```text
+# DATABASE
+DATABASE_URL
+
+# AUTH
+AUTH_SECRET
+
+# STORAGE
+STORAGE_ENDPOINT
+STORAGE_REGION
+STORAGE_BUCKET
+STORAGE_ACCESS_KEY
+STORAGE_SECRET_KEY
+
+# REDIS
+REDIS_URL
+
+# EMAIL
+EMAIL_PROVIDER
+EMAIL_API_KEY
+EMAIL_FROM
+
+# PAYMENTS
+PAYMENT_PROVIDER
+PAYMENT_SECRET
+PAYMENT_WEBHOOK_SECRET
+
+# AI
+AI_PROVIDER
+AI_API_KEY
+
+# SECURITY
+TURNSTILE_SITE_KEY
+TURNSTILE_SECRET_KEY
+
+# MONITORING
+SENTRY_DSN
+
+# ANALYTICS
+ANALYTICS_KEY
+
+# CLOUDFLARE
+CLOUDFLARE_CONFIGURATION
+```
+
+Use actual names consistent with the implementation.
+
+Never commit `.env`.
+
+---
+
+# 57. DOCKER COMPOSITION
+
+Create a development environment capable of running:
+
+```text
+app
+postgres
+redis
+worker-pdf
+worker-office
+worker-image
+worker-media
+worker-ocr
+worker-creative
+worker-cleanup
+```
+
+Do not add services that are not actually used.
+
+---
+
+# 58. PRODUCTION CONTAINERS
+
+Create production Dockerfiles where appropriate.
+
+Use:
+
+* multi-stage builds
+* minimal runtime images
+* non-root execution
+* health checks
+* environment-based configuration
+
+---
+
+# 59. PROCESSING TOOL REGISTRY
+
+Connect every tool to its actual engine.
+
+Example:
+
+```text
+compress-pdf
+    ↓
+PDF Engine
+    ↓
+Worker: pdf
+```
+
+```text
+docx-to-pdf
+    ↓
+Office Engine
+    ↓
+Worker: office
+```
+
+```text
+mp4-to-gif
+    ↓
+Media Engine
+    ↓
+Worker: media
+```
+
+```text
+jpg-to-webp
+    ↓
+Image Engine
+    ↓
+Worker: image
+```
+
+No tool may claim functionality without a processor mapping.
+
+---
+
+# 60. CAPABILITY DISCOVERY
+
+Build a capability service.
+
+Example:
+
+```text
+getSupportedConversions("DOCX")
+```
+
+returns actual supported outputs.
+
+The frontend should use this data.
+
+This prevents unsupported options from appearing.
+
+---
+
+# 61. PROVIDER STATUS
+
+Admin should be able to inspect:
+
+```text
+PostgreSQL       Connected
+Redis            Connected
+Storage          Connected
+PDF Engine       Ready
+Office Engine    Ready
+FFmpeg           Ready
+OCR              Ready
+Email            Configured
+Payment          Configured
+AI               Configured
+Monitoring       Configured
+```
+
+Status must be based on real health checks.
+
+---
+
+# 62. ADMIN INTEGRATION CENTER
+
+Create:
+
+`/admin/integrations`
+
+Sections:
+
+### Infrastructure
+
+* database
+* Redis
+* storage
+
+### Processing
+
+* PDF
+* Office
+* Image
+* Media
+* OCR
+* Creative
+
+### External
+
+* email
+* payments
+* AI
+* analytics
+* monitoring
+
+### Security
+
+* Turnstile
+* malware scanning
+* Cloudflare
+
+Show:
+
+* configured
+* not configured
+* connected
+* failed
+* last checked
+
+Do not expose secrets.
+
+---
+
+# 63. COST TRACKING
+
+Create provider usage/cost tracking where applicable.
+
+Track:
+
+* AI usage
+* OCR usage
+* external conversion API usage
+* storage
+* processing time
+
+This is important for determining whether individual tools are commercially viable.
+
+---
+
+# 64. ABUSE PROTECTION
+
+Detect:
+
+* excessive uploads
+* repeated failed processing
+* suspicious automation
+* excessive API requests
+* abnormal file sizes
+* repeated resource-intensive jobs
+
+Do not automatically ban users solely based on one signal.
+
+Create configurable abuse controls.
+
+---
+
+# 65. TESTING — INFRASTRUCTURE
+
+Create tests for:
+
+### Storage
+
+* upload
+* download
+* signed URLs
+* expiration
+* deletion
+
+### Queue
+
+* enqueue
+* processing
+* retry
+* failure
+* cancellation
+
+### Workers
+
+* startup
+* heartbeat
+* job execution
+* timeout
+* cleanup
+
+### Database
+
+* migrations
+* transactions
+* constraints
+
+---
+
+# 66. TESTING — SECURITY
+
+Test:
+
+* unauthorized download
+* cross-user access
+* invalid file signatures
+* oversized uploads
+* path traversal
+* malformed files
+* expired URLs
+* expired sessions
+* rate limits
+* webhook signature validation
+* API key revocation
+* macro-enabled Office files
+* malicious processing payloads
+
+---
+
+# 67. TESTING — REAL FILES
+
+Create real fixtures for:
+
+### PDF
+
+* normal PDF
+* multi-page PDF
+* scanned PDF
+* corrupted PDF
+* password-protected PDF
+
+### Office
+
+* DOC
+* DOCX
+* DOCM
+* XLS
+* XLSX
+* XLSM
+* CSV
+* ODS
+* PPT
+* PPTX
+* PPSX
+* ODP
+
+### Images
+
+* JPG
+* PNG
+* WebP
+* HEIC
+* SVG
+* ICO
+* transparent image
+* huge image
+
+### Media
+
+* MP4
+* MOV
+* MKV
+* MP3
+* WAV
+* GIF
+
+### Creative
+
+Only include fixtures for formats the installed engines genuinely support.
+
+---
+
+# 68. INTEGRATION TEST EXAMPLES
+
+## PDF
+
+```text
+Upload real PDF
+ ↓
+Scan
+ ↓
+Queue
+ ↓
+Worker
+ ↓
+Process
+ ↓
+Validate output
+ ↓
+Store
+ ↓
+Download
+ ↓
+Verify file
+```
+
+## Office
+
+```text
+Upload DOCX
+ ↓
+Validate
+ ↓
+Office Worker
+ ↓
+LibreOffice
+ ↓
+Generate PDF
+ ↓
+Validate PDF
+ ↓
+Download
+```
+
+## Media
+
+```text
+Upload MP4
+ ↓
+Validate
+ ↓
+Queue
+ ↓
+FFmpeg Worker
+ ↓
+Generate output
+ ↓
+Validate media
+ ↓
+Download
+```
+
+---
+
+# 69. END-TO-END MONETIZATION TEST
+
+Use a payment provider's supported test environment.
+
+Test:
+
+```text
+Free
+ ↓
+Upgrade
+ ↓
+Checkout
+ ↓
+Webhook
+ ↓
+Subscription
+ ↓
+Entitlements Updated
+ ↓
+Premium Tool
+ ↓
+Usage Recorded
+```
+
+Do not use fake production payment success.
+
+---
+
+# 70. EMAIL TEST
+
+Test:
+
+```text
+Signup
+ ↓
+Verification Email
+ ↓
+Verify
+ ↓
+Login
+ ↓
+Password Reset
+ ↓
+Reset Password
+```
+
+Use test email infrastructure where appropriate.
+
+---
+
+# 71. API TEST
+
+Test:
+
+```text
+Create API key
+ ↓
+Authenticate
+ ↓
+Submit processing job
+ ↓
+Queue
+ ↓
+Worker
+ ↓
+Complete
+ ↓
+Download/result
+ ↓
+Usage recorded
+```
+
+Test revoked key.
+
+Test exceeded quota.
+
+Test rate limit.
+
+---
+
+# 72. FAILURE INJECTION
+
+Intentionally simulate:
+
+* Redis unavailable
+* database unavailable
+* storage unavailable
+* worker crash
+* processor timeout
+* corrupted output
+* external API timeout
+
+The platform must fail gracefully.
+
+---
+
+# 73. OBSERVABILITY DASHBOARD
+
+Admin should see:
+
+* active jobs
+* queued jobs
+* failed jobs
+* average processing duration
+* worker health
+* queue depth
+* storage usage
+* API errors
+* conversion failures
+* provider health
+
+All values must be real.
+
+---
+
+# 74. PERFORMANCE TESTING
+
+Test:
+
+* concurrent uploads
+* concurrent jobs
+* large files
+* multiple workers
+* database load
+* queue throughput
+* storage throughput
+
+Record actual results.
+
+Do not invent benchmark numbers.
+
+---
+
+# 75. DEPLOYMENT DOCUMENTATION
+
+Create complete documentation for:
+
+* environment variables
+* PostgreSQL setup
+* Redis setup
+* storage setup
+* worker deployment
+* LibreOffice
+* FFmpeg
+* OCR
+* payment provider
+* email provider
+* AI provider
+* Cloudflare
+* monitoring
+* backups
+* migrations
+
+---
+
+# 76. PRODUCTION READINESS CHECKLIST
+
+Before completing this phase:
+
+### Infrastructure
+
+* [ ] PostgreSQL
+* [ ] Redis
+* [ ] Object storage
+* [ ] Workers
+* [ ] Docker
+* [ ] Health checks
+
+### Processing
+
+* [ ] PDF
+* [ ] Office
+* [ ] Image
+* [ ] Media
+* [ ] OCR
+* [ ] Creative capability system
+
+### Security
+
+* [ ] File validation
+* [ ] Malware scanning architecture
+* [ ] Rate limiting
+* [ ] Signed URLs
+* [ ] Worker isolation
+* [ ] Secure secrets
+* [ ] Turnstile architecture
+
+### Business
+
+* [ ] Payments
+* [ ] Webhooks
+* [ ] Entitlements
+* [ ] AI
+* [ ] Email
+
+### Operations
+
+* [ ] Logging
+* [ ] Error monitoring
+* [ ] Analytics
+* [ ] Backups
+* [ ] Cleanup
+* [ ] Worker monitoring
+
+---
+
+# 77. CREDENTIAL HANDLING
+
+If credentials are required but not available:
+
+DO NOT:
+
+* invent credentials
+* create fake connection success
+* hardcode examples as live values
+
+Instead:
+
+```text
+Integration Status:
+NOT CONFIGURED
+```
+
+and provide:
+
+* required environment variable
+* setup documentation
+* validation command/check
+* expected behavior after configuration
+
+---
+
+# 78. NO FAKE HEALTH CHECKS
+
+This is particularly important.
+
+Never implement:
+
+```text
+return { status: "healthy" }
+```
+
+without actually checking the dependency.
+
+Health status must come from:
+
+* database connection
+* Redis ping
+* storage operation
+* worker heartbeat
+* engine availability
+
+---
+
+# 79. FINAL CERTIFICATION
+
+At the end run:
+
+```text
+npm/bun/pnpm typecheck
+npm/bun/pnpm lint
+npm/bun/pnpm test
+npm/bun/pnpm build
+```
+
+Use the repository's actual package manager/scripts.
+
+Then run:
+
+* database migration tests
+* worker tests
+* queue tests
+* storage tests
+* real file tests
+* API tests
+* security tests
+* E2E tests
+* production container tests
+
+---
+
+# 80. FINAL REPORT FORMAT
+
+Return a detailed report:
+
+## Phase 18 Status
+
+CERTIFIED / CONDITIONALLY CERTIFIED / NOT CERTIFIED
+
+## Implemented Integrations
+
+List each.
+
+## Provider Status
+
+```text
+Database       CONNECTED / NOT CONFIGURED
+Redis          CONNECTED / NOT CONFIGURED
+Storage        CONNECTED / NOT CONFIGURED
+PDF Engine     READY / NOT READY
+Office Engine  READY / NOT READY
+Image Engine   READY / NOT READY
+FFmpeg         READY / NOT READY
+OCR            READY / NOT READY
+Creative       READY / PARTIAL
+Email          CONFIGURED / NOT CONFIGURED
+Payments       CONFIGURED / NOT CONFIGURED
+AI             CONFIGURED / NOT CONFIGURED
+Analytics      CONFIGURED / NOT CONFIGURED
+Monitoring     CONFIGURED / NOT CONFIGURED
+```
+
+## Workers
+
+List every worker and queue.
+
+## Security
+
+List implemented controls.
+
+## Testing
+
+Report exact numbers:
+
+```text
+Unit:
+Integration:
+E2E:
+Security:
+Real File:
+Build:
+Typecheck:
+Lint:
+```
+
+Do not hide failures.
+
+## Known Limitations
+
+List every genuine limitation.
+
+## Required External Setup
+
+List credentials/configuration still required from the project owner.
+
+---
+
+# 81. PHASE COMPLETION RULE
+
+This phase is complete only when the infrastructure is genuinely capable of processing real workloads.
+
+The final system must have the following fundamental path working:
+
+```text
+USER
+ ↓
+AUTHENTICATION
+ ↓
+UPLOAD
+ ↓
+VALIDATION
+ ↓
+MALWARE SCAN
+ ↓
+OBJECT STORAGE
+ ↓
+JOB QUEUE
+ ↓
+WORKER
+ ↓
+REAL PROCESSING ENGINE
+ ↓
+OUTPUT VALIDATION
+ ↓
+OBJECT STORAGE
+ ↓
+SECURE DOWNLOAD
+ ↓
+HISTORY / ANALYTICS
+```
+
+If any part is mocked, the corresponding functionality is NOT certified.
+
+---
+
+# 82. IMPORTANT FINAL INSTRUCTION
+
+Do not spend this phase polishing visual UI unless required to expose the new infrastructure.
+
+The priority is:
+
+**REAL INFRASTRUCTURE → REAL PROCESSING → REAL SECURITY → REAL OBSERVABILITY → REAL BILLING → REAL API**
+
+The existing premium UI must continue working.
+
+Do not break existing functionality.
+
+Do not replace working architecture without justification.
+
+Do not claim completion based on code existing alone.
+
+A service is considered integrated only when:
+
+1. configuration exists
+2. connection/health check works
+3. actual operation succeeds
+4. error handling works
+5. security is implemented
+6. tests verify it
+7. documentation exists
+
+Build the production foundation first.
+
+Then the individual tool categories can be connected to this infrastructure safely and at scale.
