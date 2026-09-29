@@ -32,30 +32,49 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   const relatedCats = CATEGORIES.filter((c) => c.slug !== slug).slice(0, 6);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    <div className="px-1 py-6 sm:py-8">
       <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-1 text-sm text-muted-foreground">
         <Link href="/" className="hover:text-foreground">Home</Link>
         <span className="mx-1">/</span>
         <span className="text-foreground">{category.name}</span>
       </nav>
 
-      <div className="mb-8 flex items-start gap-4">
-        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
-          <ToolIcon name={category.icon} className="h-7 w-7" />
-        </span>
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{category.name}</h1>
-          <p className="mt-1 text-muted-foreground">{category.description}</p>
-          <p className="mt-2 text-sm text-muted-foreground">{tools.length} tools</p>
+      {/* Hero header — glass panel with category accent */}
+      <div
+        className="glass mb-8 rounded-[2rem] p-6 sm:p-8"
+        style={{ ["--cat-color" as string]: `var(--cat-${category.slug})` }}
+      >
+        <div className="flex items-start gap-4">
+          <span
+            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-white shadow-md"
+            style={{ background: `var(--cat-${category.slug})` }}
+          >
+            <ToolIcon name={category.icon} className="h-8 w-8" />
+          </span>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{category.name}</h1>
+            <p className="mt-1 text-muted-foreground">{category.description}</p>
+            <div className="mt-3">
+              <span
+                className="rounded-full px-3 py-1 text-xs font-medium"
+                style={{
+                  background: `color-mix(in oklch, var(--cat-${category.slug}) 12%, transparent)`,
+                  color: `var(--cat-${category.slug})`,
+                }}
+              >
+                {tools.length} tools
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
       {popular.length > 0 && (
         <section className="mb-10">
           <h2 className="mb-4 text-lg font-semibold">Popular in {category.name}</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {popular.map((t) => (
-              <ToolCard key={t.slug} tool={t} />
+              <ToolCard key={t.slug} tool={t} categorySlug={category.slug} />
             ))}
           </div>
         </section>
@@ -65,7 +84,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <h2 className="mb-4 text-lg font-semibold">All {category.name} tools</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {tools.map((t) => (
-            <ToolCard key={t.slug} tool={t} />
+            <ToolCard key={t.slug} tool={t} categorySlug={category.slug} />
           ))}
         </div>
       </section>
@@ -89,13 +108,20 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   );
 }
 
-function ToolCard({ tool }: { tool: (typeof TOOLS)[number] }) {
+function ToolCard({ tool, categorySlug }: { tool: (typeof TOOLS)[number]; categorySlug: string }) {
   return (
     <Link
       href={`/tools/${tool.slug}`}
-      className="group flex h-full flex-col gap-3 rounded-2xl border bg-card p-5 transition hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-md elevated-card"
+      className="group flex h-full flex-col gap-3 rounded-2xl glass p-5 transition spring hover:-translate-y-1 hover:shadow-lg"
+      style={{ ["--cat-color" as string]: `var(--cat-${categorySlug})` }}
     >
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent text-accent-foreground transition group-hover:scale-105">
+      <span
+        className="flex h-11 w-11 items-center justify-center rounded-xl transition spring group-hover:scale-110"
+        style={{
+          background: `color-mix(in oklch, var(--cat-${categorySlug}) 14%, transparent)`,
+          color: `var(--cat-${categorySlug})`,
+        }}
+      >
         <ToolIcon name={tool.icon} className="h-5 w-5" />
       </span>
       <div className="flex-1">

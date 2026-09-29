@@ -37,95 +37,157 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 12px);
+
+  /* Category accent colors — each tool category gets its own vibrant identity */
+  --color-cat-pdf: var(--cat-pdf);
+  --color-cat-image: var(--cat-image);
+  --color-cat-video-audio: var(--cat-video-audio);
+  --color-cat-office: var(--cat-office);
+  --color-cat-documents: var(--cat-documents);
+  --color-cat-business: var(--cat-business);
+  --color-cat-ecommerce: var(--cat-ecommerce);
+  --color-cat-developer: var(--cat-developer);
+  --color-cat-seo: var(--cat-seo);
+  --color-cat-social: var(--cat-social);
+  --color-cat-qr-barcode: var(--cat-qr-barcode);
+  --color-cat-text: var(--cat-text);
+  --color-cat-calculators: var(--cat-calculators);
 }
 
-/* NexTool premium theme — refined neutral with a warm graphite primary.
-   Inspired by modern macOS productivity apps; not a clone of any vendor UI. */
+/* ===========================================================================
+   NexTool — macOS Tahoe (v26) design language
+   Multi-color accent system · Liquid Glass materials · Spring motion
+   =========================================================================== */
+
 :root {
-  --radius: 0.75rem;
+  --radius: 0.875rem;
 
-  /* Surfaces — layered, near-white with the faintest warm tint */
-  --background: oklch(0.99 0.003 95);
-  --foreground: oklch(0.18 0.01 260);
+  /* Base surfaces — warm off-white with subtle cool tint (not pure white) */
+  --background: oklch(0.985 0.004 250);
+  --foreground: oklch(0.21 0.014 264);
+
+  /* Cards: slightly elevated, near-white with the faintest blue tint */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.01 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.01 260);
+  --card-foreground: oklch(0.21 0.014 264);
+  --popover: oklch(0.995 0.003 250);
+  --popover-foreground: oklch(0.21 0.014 264);
 
-  /* Primary — deep graphite, not pure black, reads as "premium" not "flat" */
-  --primary: oklch(0.28 0.02 264);
-  --primary-foreground: oklch(0.99 0.003 95);
+  /* Primary — Tahoe system blue (vibrant, not graphite) */
+  --primary: oklch(0.55 0.22 255);
+  --primary-foreground: oklch(0.99 0.003 250);
 
-  --secondary: oklch(0.965 0.005 260);
-  --secondary-foreground: oklch(0.28 0.02 264);
-  --muted: oklch(0.965 0.005 260);
-  --muted-foreground: oklch(0.52 0.015 260);
-  --accent: oklch(0.95 0.012 250);
-  --accent-foreground: oklch(0.28 0.02 264);
+  --secondary: oklch(0.96 0.006 250);
+  --secondary-foreground: oklch(0.21 0.014 264);
+  --muted: oklch(0.965 0.005 250);
+  --muted-foreground: oklch(0.50 0.014 264);
+  --accent: oklch(0.95 0.018 250);
+  --accent-foreground: oklch(0.30 0.02 264);
 
-  --destructive: oklch(0.58 0.22 27);
-  --border: oklch(0.9 0.006 260);
-  --input: oklch(0.92 0.006 260);
-  --ring: oklch(0.6 0.02 264);
+  --destructive: oklch(0.58 0.24 27);
+  --border: oklch(0.90 0.006 250);
+  --input: oklch(0.92 0.006 250);
+  --ring: oklch(0.55 0.22 255);
 
-  --chart-1: oklch(0.62 0.2 264);
-  --chart-2: oklch(0.68 0.16 162);
-  --chart-3: oklch(0.76 0.19 70);
-  --chart-4: oklch(0.6 0.22 16);
-  --chart-5: oklch(0.65 0.2 305);
+  /* Chart palette — vibrant, distinct */
+  --chart-1: oklch(0.55 0.22 255);  /* blue */
+  --chart-2: oklch(0.65 0.19 162);  /* green */
+  --chart-3: oklch(0.70 0.20 70);   /* amber */
+  --chart-4: oklch(0.62 0.24 12);   /* red */
+  --chart-5: oklch(0.65 0.22 305);  /* purple */
 
-  --sidebar: oklch(0.985 0.003 260);
-  --sidebar-foreground: oklch(0.18 0.01 260);
-  --sidebar-primary: oklch(0.28 0.02 264);
-  --sidebar-primary-foreground: oklch(0.99 0.003 95);
-  --sidebar-accent: oklch(0.95 0.012 250);
-  --sidebar-accent-foreground: oklch(0.28 0.02 264);
-  --sidebar-border: oklch(0.9 0.006 260);
-  --sidebar-ring: oklch(0.6 0.02 264);
+  /* Category accents — vibrant, distinct, macOS-app-like identity */
+  --cat-pdf:            oklch(0.62 0.22 18);    /* rose-red (Preview/Pages-like) */
+  --cat-image:          oklch(0.68 0.17 152);   /* emerald (Photos-like) */
+  --cat-video-audio:     oklch(0.58 0.22 300);  /* violet (Final Cut-like) */
+  --cat-office:          oklch(0.72 0.18 70);   /* amber (Numbers-like) */
+  --cat-documents:       oklch(0.60 0.18 230);  /* sky (Pages-like) */
+  --cat-business:        oklch(0.62 0.14 175);  /* teal */
+  --cat-ecommerce:       oklch(0.68 0.20 55);   /* orange */
+  --cat-developer:       oklch(0.65 0.16 200);  /* cyan (Xcode-like) */
+  --cat-seo:             oklch(0.72 0.19 130);  /* lime */
+  --cat-social:          oklch(0.65 0.24 0);    /* pink */
+  --cat-qr-barcode:      oklch(0.62 0.24 320);  /* fuchsia */
+  --cat-text:            oklch(0.50 0.22 277);  /* indigo */
+  --cat-calculators:     oklch(0.58 0.20 255);  /* blue (Calculator-like) */
+
+  --sidebar: oklch(0.975 0.004 250);
+  --sidebar-foreground: oklch(0.21 0.014 264);
+  --sidebar-primary: oklch(0.55 0.22 255);
+  --sidebar-primary-foreground: oklch(0.99 0.003 250);
+  --sidebar-accent: oklch(0.93 0.015 250);
+  --sidebar-accent-foreground: oklch(0.30 0.02 264);
+  --sidebar-border: oklch(0.90 0.006 250);
+  --sidebar-ring: oklch(0.55 0.22 255);
+
+  /* Liquid Glass backdrop tint */
+  --glass-tint: oklch(0.99 0.005 250);
+  --glass-border: oklch(1 0 0 / 0.55);
+  --glass-highlight: oklch(1 0 0 / 0.65);
 }
 
 .dark {
-  /* Dark — intentional, layered charcoal (not pure black) with elevated cards */
-  --background: oklch(0.16 0.012 264);
-  --foreground: oklch(0.96 0.004 260);
-  --card: oklch(0.205 0.014 264);
-  --card-foreground: oklch(0.96 0.004 260);
-  --popover: oklch(0.22 0.014 264);
-  --popover-foreground: oklch(0.96 0.004 260);
+  /* Dark — deep layered graphite (not pure black), elevated cards */
+  --background: oklch(0.17 0.012 264);
+  --foreground: oklch(0.97 0.004 250);
+  --card: oklch(0.215 0.014 264);
+  --card-foreground: oklch(0.97 0.004 250);
+  --popover: oklch(0.23 0.014 264);
+  --popover-foreground: oklch(0.97 0.004 250);
 
-  --primary: oklch(0.96 0.004 260);
-  --primary-foreground: oklch(0.2 0.014 264);
+  /* Primary pops brighter in dark mode */
+  --primary: oklch(0.70 0.20 255);
+  --primary-foreground: oklch(0.18 0.02 264);
 
-  --secondary: oklch(0.26 0.014 264);
-  --secondary-foreground: oklch(0.96 0.004 260);
-  --muted: oklch(0.24 0.012 264);
-  --muted-foreground: oklch(0.7 0.012 260);
-  --accent: oklch(0.3 0.016 264);
-  --accent-foreground: oklch(0.96 0.004 260);
+  --secondary: oklch(0.27 0.014 264);
+  --secondary-foreground: oklch(0.97 0.004 250);
+  --muted: oklch(0.25 0.012 264);
+  --muted-foreground: oklch(0.71 0.012 260);
+  --accent: oklch(0.32 0.016 264);
+  --accent-foreground: oklch(0.97 0.004 250);
 
-  --destructive: oklch(0.7 0.19 22);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.55 0.02 264);
+  --destructive: oklch(0.70 0.20 22);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 13%);
+  --ring: oklch(0.65 0.20 255);
 
-  --chart-1: oklch(0.7 0.19 264);
-  --chart-2: oklch(0.72 0.16 162);
+  --chart-1: oklch(0.70 0.20 255);
+  --chart-2: oklch(0.72 0.17 162);
   --chart-3: oklch(0.78 0.18 70);
-  --chart-4: oklch(0.68 0.21 16);
-  --chart-5: oklch(0.72 0.2 305);
+  --chart-4: oklch(0.68 0.22 16);
+  --chart-5: oklch(0.72 0.20 305);
 
-  --sidebar: oklch(0.19 0.013 264);
-  --sidebar-foreground: oklch(0.96 0.004 260);
-  --sidebar-primary: oklch(0.96 0.004 260);
-  --sidebar-primary-foreground: oklch(0.2 0.014 264);
-  --sidebar-accent: oklch(0.3 0.016 264);
-  --sidebar-accent-foreground: oklch(0.96 0.004 260);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.55 0.02 264);
+  /* Category accents brightened for dark mode */
+  --cat-pdf:            oklch(0.70 0.22 18);
+  --cat-image:          oklch(0.74 0.17 152);
+  --cat-video-audio:     oklch(0.66 0.22 300);
+  --cat-office:          oklch(0.78 0.18 70);
+  --cat-documents:       oklch(0.68 0.18 230);
+  --cat-business:        oklch(0.68 0.14 175);
+  --cat-ecommerce:       oklch(0.74 0.20 55);
+  --cat-developer:       oklch(0.72 0.16 200);
+  --cat-seo:             oklch(0.78 0.19 130);
+  --cat-social:          oklch(0.70 0.24 0);
+  --cat-qr-barcode:      oklch(0.68 0.24 320);
+  --cat-text:            oklch(0.60 0.22 277);
+  --cat-calculators:     oklch(0.66 0.20 255);
+
+  --sidebar: oklch(0.20 0.013 264);
+  --sidebar-foreground: oklch(0.97 0.004 250);
+  --sidebar-primary: oklch(0.70 0.20 255);
+  --sidebar-primary-foreground: oklch(0.18 0.02 264);
+  --sidebar-accent: oklch(0.32 0.016 264);
+  --sidebar-accent-foreground: oklch(0.97 0.004 250);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.65 0.20 255);
+
+  --glass-tint: oklch(0.30 0.014 264);
+  --glass-border: oklch(1 0 0 / 0.08);
+  --glass-highlight: oklch(1 0 0 / 0.06);
 }
 
 @layer base {
@@ -134,85 +196,188 @@
   }
   html {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* macOS-style spring scroll */
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "cv11", "ss01";
+    font-feature-settings: "cv11", "ss01", "ss03";
+    /* macOS native font stack fallback */
+    font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
   }
-  /* Premium, restrained scrollbars */
+  /* Premium, restrained scrollbars (macOS overlay style) */
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.82 0.01 260 / 0.6);
+    background: oklch(0.82 0.008 260 / 0.5);
     border-radius: 999px;
     border: 2px solid transparent;
     background-clip: padding-box;
   }
   .dark ::-webkit-scrollbar-thumb {
-    background: oklch(0.4 0.012 264 / 0.7);
+    background: oklch(0.45 0.012 264 / 0.6);
     background-clip: padding-box;
     border: 2px solid transparent;
   }
-  ::-webkit-scrollbar-thumb:hover { background: oklch(0.7 0.01 260 / 0.8); background-clip: padding-box; }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.70 0.01 260 / 0.75);
+    background-clip: padding-box;
+  }
+  /* Selection uses primary accent */
+  ::selection {
+    background: oklch(0.55 0.22 255 / 0.25);
+  }
+  .dark ::selection {
+    background: oklch(0.70 0.20 255 / 0.35);
+  }
 }
 
 @layer utilities {
-  /* Liquid-glass inspired surface — subtle translucency + inner highlight.
-     Used sparingly on hero panels and elevated tool cards. */
-  .glass-surface {
+  /* ============================================================
+     LIQUID GLASS — macOS Tahoe signature material
+     Real translucency + saturation + inner highlight + soft shadow
+     ============================================================ */
+
+  /* Standard glass surface — for cards, panels */
+  .glass {
     background: linear-gradient(
       135deg,
-      oklch(1 0 0 / 0.72),
-      oklch(0.98 0.004 260 / 0.6)
+      oklch(1 0 0 / 0.78),
+      oklch(0.98 0.005 250 / 0.62)
     );
-    backdrop-filter: blur(20px) saturate(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid oklch(1 0 0 / 0.6);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
     box-shadow:
-      inset 0 1px 0 0 oklch(1 0 0 / 0.7),
+      inset 0 1px 0 0 var(--glass-highlight),
       0 1px 2px oklch(0.2 0.02 264 / 0.04),
-      0 8px 24px -8px oklch(0.2 0.02 264 / 0.08);
+      0 4px 16px -4px oklch(0.2 0.02 264 / 0.08);
   }
-  .dark .glass-surface {
+  .dark .glass {
     background: linear-gradient(
       135deg,
-      oklch(0.28 0.016 264 / 0.72),
-      oklch(0.22 0.014 264 / 0.6)
+      oklch(0.30 0.016 264 / 0.72),
+      oklch(0.22 0.014 264 / 0.56)
     );
-    border: 1px solid oklch(1 0 0 / 0.08);
     box-shadow:
-      inset 0 1px 0 0 oklch(1 0 0 / 0.06),
-      0 1px 2px oklch(0 0 0 / 0.3),
+      inset 0 1px 0 0 var(--glass-highlight),
+      0 1px 2px oklch(0 0 0 / 0.4),
       0 8px 24px -8px oklch(0 0 0 / 0.5);
   }
 
-  /* Subtle elevated card with soft shadow */
-  .elevated-card {
+  /* Heavy glass — for sidebars, toolbars (more opaque, more blur) */
+  .glass-heavy {
+    background: linear-gradient(
+      180deg,
+      oklch(1 0 0 / 0.88),
+      oklch(0.97 0.006 250 / 0.74)
+    );
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid var(--glass-border);
     box-shadow:
-      0 1px 2px oklch(0.2 0.02 264 / 0.04),
-      0 4px 16px -6px oklch(0.2 0.02 264 / 0.08);
+      inset 0 1px 0 0 var(--glass-highlight),
+      0 1px 3px oklch(0.2 0.02 264 / 0.06),
+      0 12px 32px -8px oklch(0.2 0.02 264 / 0.10);
   }
-  .dark .elevated-card {
+  .dark .glass-heavy {
+    background: linear-gradient(
+      180deg,
+      oklch(0.32 0.016 264 / 0.82),
+      oklch(0.24 0.014 264 / 0.68)
+    );
     box-shadow:
-      0 1px 2px oklch(0 0 0 / 0.4),
-      0 8px 24px -8px oklch(0 0 0 / 0.6);
+      inset 0 1px 0 0 var(--glass-highlight),
+      0 1px 3px oklch(0 0 0 / 0.5),
+      0 12px 32px -8px oklch(0 0 0 / 0.6);
   }
 
-  /* Hero gradient mesh — restrained, premium */
+  /* Subtle elevation for floating cards */
+  .elevated {
+    box-shadow:
+      0 1px 2px oklch(0.2 0.02 264 / 0.04),
+      0 4px 12px -4px oklch(0.2 0.02 264 / 0.08);
+  }
+  .dark .elevated {
+    box-shadow:
+      0 1px 2px oklch(0 0 0 / 0.4),
+      0 8px 20px -6px oklch(0 0 0 / 0.55);
+  }
+  .elevated-lg {
+    box-shadow:
+      0 2px 4px oklch(0.2 0.02 264 / 0.06),
+      0 12px 32px -8px oklch(0.2 0.02 264 / 0.12);
+  }
+  .dark .elevated-lg {
+    box-shadow:
+      0 2px 4px oklch(0 0 0 / 0.5),
+      0 16px 40px -8px oklch(0 0 0 / 0.65);
+  }
+
+  /* Hero gradient mesh — multi-color, vibrant (NOT single color) */
   .hero-mesh {
     background:
-      radial-gradient(60% 50% at 15% 10%, oklch(0.62 0.2 264 / 0.12), transparent 60%),
-      radial-gradient(50% 50% at 85% 20%, oklch(0.7 0.16 162 / 0.10), transparent 60%),
-      radial-gradient(40% 40% at 50% 100%, oklch(0.76 0.19 70 / 0.08), transparent 60%);
+      radial-gradient(50% 40% at 12% 8%,  oklch(0.55 0.22 255 / 0.18), transparent 60%),
+      radial-gradient(45% 45% at 88% 12%, oklch(0.65 0.22 300 / 0.14), transparent 60%),
+      radial-gradient(40% 40% at 70% 90%, oklch(0.68 0.17 152 / 0.12), transparent 60%),
+      radial-gradient(35% 35% at 25% 95%, oklch(0.72 0.18 70 / 0.10), transparent 60%);
   }
   .dark .hero-mesh {
     background:
-      radial-gradient(60% 50% at 15% 10%, oklch(0.62 0.2 264 / 0.22), transparent 60%),
-      radial-gradient(50% 50% at 85% 20%, oklch(0.7 0.16 162 / 0.16), transparent 60%),
-      radial-gradient(40% 40% at 50% 100%, oklch(0.76 0.19 70 / 0.10), transparent 60%);
+      radial-gradient(50% 40% at 12% 8%,  oklch(0.55 0.22 255 / 0.28), transparent 60%),
+      radial-gradient(45% 45% at 88% 12%, oklch(0.65 0.22 300 / 0.22), transparent 60%),
+      radial-gradient(40% 40% at 70% 90%, oklch(0.68 0.17 152 / 0.18), transparent 60%),
+      radial-gradient(35% 35% at 25% 95%, oklch(0.72 0.18 70 / 0.14), transparent 60%);
   }
 
+  /* Ambient texture — subtle noise for the page background (gives glass something to refract) */
+  .ambient-texture {
+    background-image:
+      radial-gradient(circle at 20% 30%, oklch(0.55 0.22 255 / 0.04), transparent 40%),
+      radial-gradient(circle at 80% 70%, oklch(0.65 0.22 300 / 0.03), transparent 40%);
+  }
+  .dark .ambient-texture {
+    background-image:
+      radial-gradient(circle at 20% 30%, oklch(0.55 0.22 255 / 0.06), transparent 40%),
+      radial-gradient(circle at 80% 70%, oklch(0.65 0.22 300 / 0.05), transparent 40%);
+  }
+
+  /* Category accent helper — apply color from CSS var */
+  .accent-cat {
+    background: color-mix(in oklch, var(--cat-color, var(--primary)) 14%, transparent);
+    color: var(--cat-color, var(--primary));
+  }
+  .accent-cat-strong {
+    background: var(--cat-color, var(--primary));
+    color: white;
+  }
+  .accent-cat-soft {
+    background: color-mix(in oklch, var(--cat-color, var(--primary)) 8%, transparent);
+    color: var(--cat-color, var(--primary));
+  }
+  .accent-cat-border {
+    border-color: color-mix(in oklch, var(--cat-color, var(--primary)) 30%, transparent);
+  }
+  .accent-cat-glow {
+    box-shadow: 0 8px 24px -8px color-mix(in oklch, var(--cat-color, var(--primary)) 45%, transparent);
+  }
+
+  /* Pill shape (macOS Tahoe controls) */
+  .pill {
+    border-radius: 999px;
+  }
+
+  /* Spring animation timing (macOS natural motion) */
+  .spring {
+    transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .spring-smooth {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Text helpers */
   .text-balance { text-wrap: balance; }
   .text-pretty { text-wrap: pretty; }
 }

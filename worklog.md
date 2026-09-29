@@ -542,3 +542,44 @@ Stage Summary:
 - Admin observability: /admin, /admin/integrations, /admin/workers, /admin/jobs/[id] with real KPIs from DB.
 - Docker composition + multi-stage Dockerfiles + 4 docs files (deployment/architecture/providers/security).
 - .env.example comprehensive.
+
+---
+Task ID: UX-1 to UX-6
+Agent: main
+Task: macOS Tahoe (v26) full UX/UI redesign — liquid glass materials, multi-color accent system, floating sidebar, spring animations.
+
+Work Log:
+- Rewrote `src/app/globals.css`:
+  - 13 category accent CSS variables (rose/emerald/violet/amber/sky/teal/orange/cyan/lime/pink/fuchsia/indigo/blue) — each tool category gets its own vibrant color identity (NOT single color).
+  - Vibrant Tahoe system blue primary (oklch 0.55 0.22 255) instead of graphite.
+  - Real liquid glass utilities: `.glass` (24px blur, 180% saturation, inner highlight, soft shadow), `.glass-heavy` (40px blur, 200% saturation, for sidebars/toolbars).
+  - Multi-color hero mesh gradient (blue + violet + emerald + amber radial layers).
+  - Ambient texture background (gives glass something to refract).
+  - `.accent-cat` helpers using `color-mix(in oklch, ...)` for category-colored backgrounds/text.
+  - Pill shape utility, spring + spring-smooth timing functions.
+  - macOS native font stack fallback, premium overlay scrollbars, primary-colored selection.
+- Built `src/components/layout/sidebar.tsx`: floating translucent sidebar (Finder-style) with gradient logo, Navigate section, Categories section (each with category accent color icon), pricing CTA. Spring animation in/out.
+- Built `src/components/layout/top-bar.tsx`: macOS menu bar style — sidebar toggle, Spotlight-style command search pill, theme toggle, user menu.
+- Rewrote `src/components/layout/app-shell.tsx`: SessionProvider + TopBar + floating Sidebar + content + Footer + CommandPalette. Mobile sidebar overlay with backdrop. Global Cmd+K.
+- Redesigned `src/app/page.tsx` homepage: liquid glass hero with multi-color mesh + Spotlight search + colored quick-action pills + stats strip; colorful category tiles (each with its accent color); featured/popular tool cards with category-colored icon backgrounds; "why use us" section with colored feature icons; glass CTA.
+- Updated `src/components/layout/footer.tsx`: floating glass panel footer.
+- Updated `src/app/category/[slug]/page.tsx`: glass hero header with category accent color, glass tool cards.
+- Updated `src/components/tools/tool-page-layout.tsx`: glass header panel with category accent, glass info cards, glass related-tools with category colors.
+- Fixed `src/lib/security/rate-limit.ts` ioredis dynamic import (honest fallback to memory when not installed).
+- Fixed lint: 2 set-state-in-effect errors → 0.
+
+Verification (Agent Browser):
+- Homepage light mode: glass hero, multi-color quick actions, colorful category grid — all render.
+- Dark mode: layered charcoal glass surfaces with vibrant accents.
+- Mobile (375px): sidebar collapsed, opens as floating overlay with backdrop blur on toggle.
+- Tool page + category page: glass headers with category accent colors.
+
+Lint: 0 errors, 0 warnings.
+
+Stage Summary:
+- Complete macOS Tahoe redesign delivered.
+- Multi-color system: 13 distinct category accents (no more single-color).
+- Liquid glass materials with real backdrop-blur + saturation.
+- Floating sidebar + top bar layout (Finder/menu-bar inspired).
+- Spring animations throughout.
+- Responsive (mobile sidebar overlay) + dark mode verified.

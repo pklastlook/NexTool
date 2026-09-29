@@ -68,19 +68,45 @@ function memoryRateLimit(key: string, opts: RateLimitOpts): RateLimitResult {
 }
 
 /**
- * Redis-backed distributed rate limit (Lua script for atomicity).
- * Used when REDIS_URL is set. Falls back to memory on Redis error.
+ * Redis-backed distributed rate limit.
+ * Used when REDIS_URL is set. Requires `ioredis` to be installed.
+ * Falls back to memory if ioredis is not available (e.g. in the sandbox).
+ * In production with Redis configured, install ioredis to enable this path.
  */
 async function redisRateLimit(key: string, opts: RateLimitOpts): Promise<RateLimitResult> {
-  // Implementation uses ioredis. For sandbox (no Redis), this path is never hit.
-  // Keeping it here so production works once REDIS_URL is configured.
   try {
-    const { default: IORedis } = await import("ioredis").catch(() => ({ default: null as any }));
-    if (!IORedis) return memoryRateLimit(key, opts);
-    // (Real implementation would use a Lua script for INCR+EXPIRE atomicity.)
-    // For now, fall back to memory — the provider status page clearly says
-    // "Redis not configured" so this branch is never trusted silently.
-    return memoryRateLimit(key, opts);
+    // Dynamic import — if ioredis isn't installed, fall back to memory.
+    const mod = await import("ioredis").catch(() => null);
+    if (!mod || !mod.default) {
+      // ioredis not installed — honest fallback to memory.
+      return memoryRateLimit(key, opts);
+    }
+    const IORedis = mod.default;
+    const redis = new IORedis(env.REDIS_URL!, { lazyConnect: false, maxRetriesPerRequest: 1 });
+    try {
+      // Atomic INCR + EXPIRE via a Lua script
+      const lua = `
+        local count = redis.call('INCR', KEYS[1])
+        if count == 1 then
+          redis.call('EXPIRE', KEYS[1], tonumber(ARGV[1]))
+        end
+        local ttl = redis.call('TTL', KEYS[1])
+        return {count, ttl}
+      `;
+      const result = (await redis.eval(lua, 1, key, opts.windowSec)) as [number, number];
+      const [count, ttl] = result;
+      await redis.quit();
+      const allowed = count <= opts.limit;
+      return {
+        allowed,
+        limit: opts.limit,
+        remaining: Math.max(0, opts.limit - count),
+        resetAt: Date.now() + ttl * 1000,
+      };
+    } catch (e) {
+      await redis.quit().catch(() => {});
+      throw e;
+    }
   } catch {
     return memoryRateLimit(key, opts);
   }

@@ -7,12 +7,12 @@ import { ToolIcon } from "@/components/tools/tool-icon";
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t bg-background/60 backdrop-blur">
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    <footer className="mt-auto px-3 pb-4 sm:px-4">
+      <div className="glass mx-auto max-w-[1400px] rounded-3xl px-6 py-8 sm:px-10">
         <div className="grid gap-8 md:grid-cols-[1.4fr_repeat(3,1fr)]">
           <div>
-            <Link href="/" className="flex items-center gap-2 font-semibold">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Link href="/" className="flex items-center gap-2.5 font-semibold">
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[oklch(0.55_0.22_255)] to-[oklch(0.62_0.22_300)] text-white shadow-md">
                 <Wrench className="h-4 w-4" />
               </span>
               <span>NexTool</span>
@@ -43,15 +43,16 @@ export function Footer() {
               { label: "Popular tools", href: "/tools?filter=popular" },
               { label: "Provider status", href: "/status" },
               { label: "Pricing", href: "/pricing" },
-              { label: "API", href: "/api-docs" },
+              { label: "API docs", href: "/api-docs" },
+              { label: "Admin", href: "/admin" },
             ]}
           />
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t pt-6 text-xs text-muted-foreground sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-border/40 pt-6 text-xs text-muted-foreground sm:flex-row">
           <p>© {new Date().getFullYear()} NexTool. Built as a real, working tools platform.</p>
           <p className="inline-flex items-center gap-1.5">
-            Crafted with <Heart className="h-3 w-3 fill-current text-rose-500" /> using Next.js
+            Crafted with <Heart className="h-3 w-3 fill-current text-rose-500" /> macOS Tahoe-inspired design
           </p>
         </div>
       </div>
