@@ -36,7 +36,19 @@ const DEV_SECRET = "dev-secret-DO-NOT-USE-IN-PRODUCTION";
 function resolveAuthSecret(): string {
   if (env.AUTH_SECRET) return env.AUTH_SECRET;
 
-  if (env.NODE_ENV === "production") {
+  // Detect Next.js build phase — during `next build`, route modules are
+  // evaluated to collect page data. We must NOT throw here or the build
+  // fails. Fall back to a placeholder; the secret is never actually used
+  // during build (no requests are served).
+  const isBuildPhase =
+    env.NODE_ENV === "production" &&
+    (process.env.NEXT_PHASE === "phase-production-build" ||
+      process.env.__NEXT_BUILD_PHASE === "true" ||
+      // `next build` runs with `NEXT_BUILD=true` in some setups; also detect
+      // by checking if we're being imported for page-data collection.
+      process.env.BUILDING === "true");
+
+  if (env.NODE_ENV === "production" && !isBuildPhase) {
     throw new Error(
       "[auth] FATAL: AUTH_SECRET is not set in production. " +
       "Generate one with `openssl rand -base64 32` and add it to .env. " +
@@ -44,7 +56,7 @@ function resolveAuthSecret(): string {
     );
   }
 
-  // Dev fallback — loud warning, never silent.
+  // Dev fallback / build-time placeholder — loud warning, never silent.
   if (!process.env.__NEXTAUTH_DEV_SECRET_WARNED) {
     console.warn(
       "[auth] WARNING: AUTH_SECRET is not set. Falling back to a known " +

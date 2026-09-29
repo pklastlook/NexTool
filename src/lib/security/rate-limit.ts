@@ -75,14 +75,23 @@ function memoryRateLimit(key: string, opts: RateLimitOpts): RateLimitResult {
  */
 async function redisRateLimit(key: string, opts: RateLimitOpts): Promise<RateLimitResult> {
   try {
-    // Dynamic import — if ioredis isn't installed, fall back to memory.
-    const mod = await import("ioredis").catch(() => null);
-    if (!mod || !mod.default) {
+    // Hide the ioredis import from the bundler's static analysis — we only
+    // want to load it at runtime if Redis is configured AND the package is
+    // installed. Using a variable specifier defeats static resolution.
+    const modName = "ioredis";
+    // createRequire lets us use a dynamic require() in ESM.
+    const { createRequire } = await import("node:module");
+    const req = createRequire(import.meta.url);
+    let IORedis: any;
+    try {
+      IORedis = req(modName);
+      IORedis = IORedis.default || IORedis;
+    } catch {
       // ioredis not installed — honest fallback to memory.
       return memoryRateLimit(key, opts);
     }
-    const IORedis = mod.default;
-    const redis = new IORedis(env.REDIS_URL!, { lazyConnect: false, maxRetriesPerRequest: 1 });
+    if (!IORedis || !env.REDIS_URL) return memoryRateLimit(key, opts);
+    const redis = new IORedis(env.REDIS_URL, { lazyConnect: false, maxRetriesPerRequest: 1 });
     try {
       // Atomic INCR + EXPIRE via a Lua script
       const lua = `
