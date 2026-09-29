@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// NexTool — Premium All-in-One Online Tools Platform
+// Prisma schema (SQLite for the sandbox; PostgreSQL-ready architecture)
 
 generator client {
   provider = "prisma-client-js"
@@ -13,20 +10,254 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ---------------------------------------------------------------------------
+// Authentication & Users
+// ---------------------------------------------------------------------------
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  role          String    @default("user") // user | admin
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions      Session[]
+  apiKeys       ApiKey[]
+  jobs          ProcessingJob[]
+  favorites     FavoriteTool[]
+  history       ToolHistory[]
+  analytics     AnalyticsEvent[]
 }
 
-model Post {
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Tool Registry
+// ---------------------------------------------------------------------------
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  icon        String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  tools       Tool[]
+}
+
+model Tool {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  name          String
+  categoryId    String
+  description   String
+  icon          String?
+  keywords      String    // pipe-separated
+  seoTitle      String?
+  seoDescription String?
+  inputFormats  String?   // pipe-separated
+  outputFormats String?   // pipe-separated
+  processingType String   // client | server | worker
+  maxFileSize   Int       @default(10485760) // 10MB
+  premium       Boolean   @default(false)
+  featured      Boolean   @default(false)
+  popular       Boolean   @default(false)
+  active        Boolean   @default(true)
+  version       String    @default("1.0.0")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  category      Category  @relation(fields: [categoryId], references: [id])
+  favorites     FavoriteTool[]
+  history       ToolHistory[]
+  jobs          ProcessingJob[]
+  usage         ToolUsage?
+
+  @@index([categoryId])
+  @@index([slug])
+}
+
+// ---------------------------------------------------------------------------
+// Files & Jobs
+// ---------------------------------------------------------------------------
+
+model FileAsset {
+  id          String   @id @default(cuid())
+  userId      String?
+  originalName String
+  storedName  String
+  mimeType    String
+  size        Int
+  storagePath String
+  role        String   // input | output
+  jobId       String?
+  expiresAt   DateTime?
+  status      String   @default("active") // active | expired | deleted
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([jobId])
+}
+
+model ProcessingJob {
+  id           String   @id @default(cuid())
+  userId       String?
+  toolId       String
+  status       String   @default("created")
+  // created | queued | validating | scanning | processing |
+  // validating_output | completed | failed | cancelled | expired
+  priority     Int      @default(0)
+  attempts     Int      @default(0)
+  options      String?  // JSON string
+  errorCode    String?
+  errorMessage String?
+  resultMeta   String?  // JSON: sizes, counts, etc.
+  startedAt    DateTime?
+  completedAt   DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User?    @relation(fields: [userId], references: [id])
+  tool         Tool     @relation(fields: [toolId], references: [id])
+  events       JobEvent[]
+
+  @@index([userId])
+  @@index([toolId])
+  @@index([status])
+}
+
+model JobEvent {
   id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  jobId     String
+  level     String   // info | warn | error
+  message   String
+  meta      String?  // JSON
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  job       ProcessingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+}
+
+// ---------------------------------------------------------------------------
+// Usage & Analytics
+// ---------------------------------------------------------------------------
+
+model ToolUsage {
+  toolId     String   @id
+  tool       Tool     @relation(fields: [toolId], references: [id])
+  totalRuns  Int      @default(0)
+  successRuns Int     @default(0)
+  failedRuns Int      @default(0)
+  lastUsedAt DateTime?
+
+  @@index([toolId])
+}
+
+model ToolHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  toolId    String
+  meta      String?  // JSON
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool      Tool     @relation(fields: [toolId], references: [id])
+
+  @@index([userId])
+}
+
+model FavoriteTool {
+  id        String   @id @default(cuid())
+  userId    String
+  toolId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool      Tool     @relation(fields: [toolId], references: [id])
+
+  @@unique([userId, toolId])
+  @@index([userId])
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  userId    String?
+  eventName String
+  meta      String?  // JSON
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([eventName])
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// API Platform
+// ---------------------------------------------------------------------------
+
+model ApiKey {
+  id           String   @id @default(cuid())
+  userId       String
+  name         String
+  keyPrefix    String   // visible prefix, e.g. "nt_live_abc…"
+  keyHash      String   // hashed secret
+  lastUsedAt   DateTime?
+  revokedAt    DateTime?
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  usage        ApiUsage[]
+  @@index([userId])
+}
+
+model ApiUsage {
+  id        String   @id @default(cuid())
+  apiKeyId  String
+  endpoint  String
+  method    String
+  status    Int
+  durationMs Int
+  createdAt DateTime @default(now())
+  apiKey    ApiKey   @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+
+  @@index([apiKeyId])
+}
+
+// ---------------------------------------------------------------------------
+// System
+// ---------------------------------------------------------------------------
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  actorId   String?
+  target    String?
+  meta      String?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+}
+
+model SystemSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+model FeatureFlag {
+  id       String @id @default(cuid())
+  key      String @unique
+  enabled  Boolean @default(false)
 }

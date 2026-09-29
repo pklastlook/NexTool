@@ -1,0 +1,2002 @@
+     1→MASTER BUILD PROMPT — PREMIUM ALL-IN-ONE ONLINE TOOLS PLATFORM
+     2→PROJECT
+     3→
+     4→Build a production-grade, full-stack online tools platform that provides a large collection of practical digital utilities from one premium web application.
+     5→
+     6→The platform should become a serious commercial product where users can:
+     7→
+     8→Convert files
+     9→Compress files
+    10→Merge and split files
+    11→Edit documents
+    12→Generate business documents
+    13→Process images
+    14→Process video and audio
+    15→Convert Microsoft Office files
+    16→Process supported Adobe/creative files
+    17→Perform OCR
+    18→Generate QR codes and barcodes
+    19→Use business calculators
+    20→Use developer utilities
+    21→Perform SEO tasks
+    22→Create e-commerce assets
+    23→Create social-media assets
+    24→Use selected AI-powered tools
+    25→Access tools through an API
+    26→
+    27→This must be a REAL application.
+    28→
+    29→This is NOT a prototype.
+    30→
+    31→This is NOT a visual-only demo.
+    32→
+    33→This is NOT a collection of mocked tools.
+    34→
+    35→Every feature represented as available must actually work.
+    36→
+    37→1. MOST IMPORTANT RULES
+    38→
+    39→These rules apply to the entire project.
+    40→
+    41→NEVER use:
+    42→
+    43→Mock data
+    44→Dummy data
+    45→Fake data
+    46→Hardcoded dashboard statistics
+    47→Fake API responses
+    48→Fake processing results
+    49→Fake conversion results
+    50→Fake downloads
+    51→Fake analytics
+    52→Fake users
+    53→Fake subscriptions
+    54→Fake payment confirmations
+    55→Fake job completion
+    56→Fake progress percentages
+    57→Fake AI responses
+    58→Placeholder output files
+    59→Renamed file extensions presented as conversions
+    60→Fake worker status
+    61→Fake provider connection status
+    62→Fake health checks
+    63→Fake success messages
+    64→"Coming Soon" for features advertised as functional
+    65→
+    66→If an integration requires credentials that are not available, implement the real integration architecture and clearly mark the integration as NOT CONFIGURED until credentials are supplied.
+    67→
+    68→Never fabricate successful connections.
+    69→
+    70→If a particular conversion cannot be reliably implemented with the available processing engine, do not fake it.
+    71→
+    72→Only expose genuinely supported functionality.
+    73→
+    74→2. FIRST ACTION — REPOSITORY AUDIT
+    75→
+    76→Before changing significant code, inspect the entire existing repository.
+    77→
+    78→Review:
+    79→
+    80→Framework
+    81→React architecture
+    82→TypeScript configuration
+    83→package manager
+    84→package.json
+    85→existing components
+    86→routes
+    87→API routes
+    88→database
+    89→Prisma/schema
+    90→authentication
+    91→authorization
+    92→storage
+    93→file uploads
+    94→job queues
+    95→workers
+    96→Docker
+    97→environment variables
+    98→existing tools
+    99→existing design system
+   100→existing tests
+   101→deployment configuration
+   102→CI/CD
+   103→logging
+   104→monitoring
+   105→billing
+   106→analytics
+   107→AI integrations
+   108→
+   109→Determine:
+   110→
+   111→What already works
+   112→What is partially implemented
+   113→What is missing
+   114→What is broken
+   115→What is duplicated
+   116→What is unsafe
+   117→What should be reused
+   118→What should be refactored
+   119→What should be replaced
+   120→
+   121→Do not blindly rebuild existing functionality.
+   122→
+   123→Preserve working functionality unless there is a technical reason to change it.
+   124→
+   125→3. PRODUCT VISION
+   126→
+   127→Create an all-in-one digital utility platform.
+   128→
+   129→The product should make common digital tasks extremely simple.
+   130→
+   131→The core experience should be:
+   132→
+   133→USER ARRIVES
+   134→
+   135→↓
+   136→
+   137→SEARCHES FOR A TASK
+   138→
+   139→↓
+   140→
+   141→OPENS TOOL
+   142→
+   143→↓
+   144→
+   145→UPLOADS FILE / ENTERS DATA
+   146→
+   147→↓
+   148→
+   149→CONFIGURES OPTIONS
+   150→
+   151→↓
+   152→
+   153→PROCESSING
+   154→
+   155→↓
+   156→
+   157→REAL RESULT
+   158→
+   159→↓
+   160→
+   161→DOWNLOAD / COPY / SAVE
+   162→
+   163→The platform should feel:
+   164→
+   165→Fast
+   166→Premium
+   167→Reliable
+   168→Simple
+   169→Professional
+   170→Intelligent
+   171→Privacy-conscious
+   172→Accessible
+   173→4. DESIGN DIRECTION
+   174→
+   175→Use an original premium visual language inspired by modern Apple/macOS design principles.
+   176→
+   177→The design should include concepts such as:
+   178→
+   179→Liquid-glass-inspired surfaces
+   180→Translucency
+   181→Depth
+   182→Layered panels
+   183→Soft reflections
+   184→Elegant shadows
+   185→Refined typography
+   186→Large whitespace
+   187→Retina-quality graphics
+   188→Fluid animations
+   189→Sophisticated dark mode
+   190→Premium controls
+   191→Precise spacing
+   192→
+   193→Do NOT clone Apple's UI.
+   194→
+   195→Do NOT use Apple's proprietary assets.
+   196→
+   197→Do NOT claim Apple affiliation.
+   198→
+   199→Do not make the design look like a generic SaaS template.
+   200→
+   201→Avoid:
+   202→
+   203→excessive gradients
+   204→excessive glass
+   205→giant rounded cards everywhere
+   206→rainbow colors
+   207→generic illustrations
+   208→excessive animations
+   209→clutter
+   210→outdated Bootstrap-style UI
+   211→
+   212→The design should feel like a premium modern productivity application.
+   213→
+   214→5. RESPONSIVE DESIGN
+   215→
+   216→The entire application must work on:
+   217→
+   218→4K desktop
+   219→desktop
+   220→laptop
+   221→tablet
+   222→iPhone
+   223→Android
+   224→small mobile screens
+   225→
+   226→Desktop should provide:
+   227→
+   228→advanced navigation
+   229→mega menu
+   230→command search
+   231→multi-column layouts
+   232→large workspaces
+   233→
+   234→Mobile should have:
+   235→
+   236→dedicated responsive layouts
+   237→touch-friendly controls
+   238→compact navigation
+   239→optimized file upload
+   240→sticky actions where appropriate
+   241→mobile-friendly tables
+   242→full-screen tool workspace where appropriate
+   243→
+   244→Do not simply shrink the desktop UI.
+   245→
+   246→6. RECOMMENDED TECHNOLOGY STACK
+   247→
+   248→Use a modern production stack.
+   249→
+   250→Frontend:
+   251→
+   252→Next.js
+   253→React
+   254→TypeScript
+   255→Tailwind CSS
+   256→shadcn/ui where useful
+   257→Framer Motion or equivalent
+   258→Lucide or consistent icon library
+   259→
+   260→Backend:
+   261→
+   262→Next.js server/API architecture or properly separated Node.js backend
+   263→
+   264→Database:
+   265→
+   266→PostgreSQL
+   267→
+   268→ORM:
+   269→
+   270→Prisma or another mature production ORM
+   271→
+   272→Validation:
+   273→
+   274→Zod
+   275→
+   276→Authentication:
+   277→
+   278→Secure session-based authentication
+   279→
+   280→Storage:
+   281→
+   282→S3-compatible object storage
+   283→
+   284→Queue:
+   285→
+   286→Redis
+   287→BullMQ or equivalent
+   288→
+   289→Workers:
+   290→
+   291→Docker-based isolated processing workers
+   292→7. APPLICATION ARCHITECTURE
+   293→
+   294→Use a modular architecture.
+   295→
+   296→Recommended structure:
+   297→
+   298→app
+   299→
+   300→components
+   301→
+   302→features
+   303→
+   304→lib
+   305→
+   306→server
+   307→
+   308→services
+   309→
+   310→workers
+   311→
+   312→processors
+   313→
+   314→providers
+   315→
+   316→db
+   317→
+   318→types
+   319→
+   320→tests
+   321→
+   322→docs
+   323→
+   324→The exact structure may differ based on the existing repository.
+   325→
+   326→Do not force a folder structure if the existing architecture is already sound.
+   327→
+   328→8. PROVIDER ABSTRACTION
+   329→
+   330→Do not hard-code third-party providers throughout the application.
+   331→
+   332→Create provider interfaces.
+   333→
+   334→Examples:
+   335→
+   336→StorageProvider
+   337→
+   338→PaymentProvider
+   339→
+   340→AIProvider
+   341→
+   342→EmailProvider
+   343→
+   344→OCRProvider
+   345→
+   346→OfficeConversionProvider
+   347→
+   348→CreativeConversionProvider
+   349→
+   350→MalwareScanner
+   351→
+   352→AnalyticsProvider
+   353→
+   354→Example:
+   355→
+   356→StorageProvider
+   357→
+   358→LocalStorageProvider
+   359→S3StorageProvider
+   360→
+   361→PaymentProvider
+   362→
+   363→StripeProvider
+   364→FutureProvider
+   365→
+   366→AIProvider
+   367→
+   368→OpenAIProvider
+   369→FutureProvider
+   370→
+   371→OCRProvider
+   372→
+   373→TesseractProvider
+   374→CloudOCRProvider
+   375→
+   376→This allows providers to be replaced without rewriting the application.
+   377→
+   378→9. TOOL REGISTRY
+   379→
+   380→Create a central database/configuration-driven tool registry.
+   381→
+   382→Every tool should contain:
+   383→
+   384→ID
+   385→slug
+   386→name
+   387→category
+   388→description
+   389→icon
+   390→keywords
+   391→SEO title
+   392→SEO description
+   393→supported input formats
+   394→supported output formats
+   395→processing type
+   396→client/server classification
+   397→maximum file size
+   398→usage limits
+   399→premium status
+   400→popularity
+   401→featured status
+   402→version
+   403→active status
+   404→processor/provider
+   405→estimated processing behavior
+   406→
+   407→The frontend should read tool capability information from the registry.
+   408→
+   409→Do not duplicate tool definitions across multiple pages.
+   410→
+   411→10. TOOL ENGINE
+   412→
+   413→Create a reusable Tool Engine.
+   414→
+   415→Every tool should use a consistent lifecycle:
+   416→
+   417→INPUT
+   418→
+   419→↓
+   420→
+   421→VALIDATION
+   422→
+   423→↓
+   424→
+   425→OPTION SELECTION
+   426→
+   427→↓
+   428→
+   429→PROCESSING
+   430→
+   431→↓
+   432→
+   433→OUTPUT VALIDATION
+   434→
+   435→↓
+   436→
+   437→RESULT
+   438→
+   439→↓
+   440→
+   441→DOWNLOAD / COPY / SAVE
+   442→
+   443→Tool states:
+   444→
+   445→Initial
+   446→Drag Over
+   447→File Selected
+   448→Validating
+   449→Uploading
+   450→Queued
+   451→Processing
+   452→Success
+   453→Partial Success
+   454→Error
+   455→Cancelled
+   456→Expired
+   457→Downloading
+   458→Completed
+   459→
+   460→Never fabricate progress.
+   461→
+   462→If exact progress cannot be measured, show an honest indeterminate processing state.
+   463→
+   464→11. GLOBAL NAVIGATION
+   465→
+   466→Create:
+   467→
+   468→Home
+   469→
+   470→Tools
+   471→
+   472→Popular
+   473→
+   474→New
+   475→
+   476→My Tools
+   477→
+   478→Pricing
+   479→
+   480→API
+   481→
+   482→Add:
+   483→
+   484→command search
+   485→mega menu
+   486→keyboard navigation
+   487→responsive mobile navigation
+   488→
+   489→Command shortcut:
+   490→
+   491→Ctrl + K on Windows/Linux
+   492→
+   493→Cmd + K on macOS
+   494→
+   495→12. TOOL CATEGORIES
+   496→
+   497→Create these primary categories:
+   498→
+   499→PDF
+   500→Images
+   501→Video & Audio
+   502→Documents
+   503→Microsoft Office
+   504→Adobe & Creative
+   505→Business
+   506→E-commerce
+   507→Developer
+   508→SEO
+   509→Social Media
+   510→QR & Barcode
+   511→Calculators
+   512→AI
+   513→
+   514→Each category should have:
+   515→
+   516→category landing page
+   517→featured tools
+   518→popular tools
+   519→newest tools
+   520→search
+   521→filters
+   522→related tools
+   523→useful SEO content
+   524→FAQ
+   525→13. HOMEPAGE
+   526→
+   527→Create a premium homepage.
+   528→
+   529→Hero heading:
+   530→
+   531→Powerful tools for everyday work.
+   532→
+   533→Subtitle:
+   534→
+   535→Convert, compress, create, calculate and simplify — all in one place.
+   536→
+   537→Search placeholder:
+   538→
+   539→What do you need to do?
+   540→
+   541→Quick actions:
+   542→
+   543→Compress PDF
+   544→Convert Image
+   545→Create Invoice
+   546→Convert Word
+   547→Generate QR
+   548→Calculate Profit
+   549→
+   550→Homepage sections:
+   551→
+   552→Hero
+   553→Popular Tools
+   554→Categories
+   555→Most Used
+   556→Recently Added
+   557→Tools for Business
+   558→Tools for Developers
+   559→Tools for Designers
+   560→Tools for E-commerce
+   561→Why Use Us
+   562→Privacy
+   563→Pricing
+   564→FAQ
+   565→14. PDF TOOLS
+   566→
+   567→Implement real PDF functionality.
+   568→
+   569→Conversion:
+   570→
+   571→PDF → Word
+   572→PDF → Excel
+   573→PDF → PowerPoint
+   574→PDF → JPG
+   575→PDF → PNG
+   576→PDF → Text
+   577→PDF → HTML
+   578→
+   579→Manipulation:
+   580→
+   581→Merge PDF
+   582→Split PDF
+   583→Rotate PDF
+   584→Extract PDF Pages
+   585→Delete PDF Pages
+   586→Reorder PDF Pages
+   587→PDF Page Numberer
+   588→PDF Watermark
+   589→
+   590→Optimization:
+   591→
+   592→PDF Compressor
+   593→
+   594→Security:
+   595→
+   596→PDF Password Protection
+   597→PDF Unlock only when legitimate password access is supplied
+   598→
+   599→OCR:
+   600→
+   601→Scanned PDF → Text
+   602→Scanned PDF → Word
+   603→Scanned PDF → Excel
+   604→
+   605→Every output must be validated.
+   606→
+   607→15. IMAGE TOOLS
+   608→
+   609→Implement:
+   610→
+   611→JPG → PNG
+   612→PNG → JPG
+   613→JPG → WebP
+   614→PNG → WebP
+   615→WebP → JPG
+   616→HEIC → JPG
+   617→SVG → PNG
+   618→ICO → PNG
+   619→Image → PDF
+   620→Image Compressor
+   621→Image Resizer
+   622→Image Cropper
+   623→Image DPI utility
+   624→EXIF remover
+   625→Image Watermark
+   626→Favicon Generator
+   627→Social Media Image Resizer
+   628→Passport Photo utility
+   629→Background Removal where genuinely supported
+   630→
+   631→Show actual:
+   632→
+   633→original file size
+   634→output file size
+   635→compression savings
+   636→original dimensions
+   637→output dimensions
+   638→16. MICROSOFT OFFICE
+   639→
+   640→Create:
+   641→
+   642→/tools/office
+   643→
+   644→Support genuinely available formats.
+   645→
+   646→Word:
+   647→
+   648→DOC → DOCX
+   649→DOCX → PDF
+   650→DOCX → JPG
+   651→DOCX → PNG
+   652→DOCX → TXT
+   653→DOCX → HTML
+   654→DOCX → RTF
+   655→DOCX ↔ ODT
+   656→
+   657→Excel:
+   658→
+   659→XLS → XLSX
+   660→XLSX → PDF
+   661→XLSX → CSV
+   662→CSV → XLSX
+   663→XLSX → JSON
+   664→XLSX → XML
+   665→XLSX → HTML
+   666→XLSX → TXT
+   667→XLSX ↔ ODS
+   668→
+   669→PowerPoint:
+   670→
+   671→PPT → PPTX
+   672→PPTX → PDF
+   673→PPTX → JPG
+   674→PPTX → PNG
+   675→PPTX → Text
+   676→PPTX → HTML
+   677→PPTX ↔ ODP
+   678→
+   679→Office utilities:
+   680→
+   681→DOCX Merger
+   682→DOCX Splitter
+   683→Word Counter
+   684→Excel Sheet Merger
+   685→Excel Sheet Splitter
+   686→Spreadsheet Cleaner
+   687→Office File Preview
+   688→
+   689→Office → PDF hub:
+   690→
+   691→/tools/office-to-pdf
+   692→
+   693→Support:
+   694→
+   695→Word → PDF
+   696→Excel → PDF
+   697→PowerPoint → PDF
+   698→
+   699→Only show conversions that the actual installed provider can perform.
+   700→
+   701→17. PDF → OFFICE
+   702→
+   703→Implement:
+   704→
+   705→PDF → Word
+   706→PDF → Excel
+   707→PDF → PowerPoint
+   708→
+   709→Add OCR architecture for scanned PDFs.
+   710→
+   711→Detect whether PDF contains:
+   712→
+   713→selectable text
+   714→scanned images
+   715→mixed content
+   716→
+   717→Do not promise perfect reconstruction.
+   718→
+   719→18. OFFICE SECURITY
+   720→
+   721→Detect:
+   722→
+   723→DOCM
+   724→XLSM
+   725→PPTM
+   726→
+   727→Never execute macros.
+   728→
+   729→Never execute embedded scripts.
+   730→
+   731→Detect encrypted/password-protected Office documents.
+   732→
+   733→Do not crack passwords.
+   734→
+   735→If a password is supplied and the processing engine legitimately supports it, allow processing.
+   736→
+   737→Clearly indicate whether macros were:
+   738→
+   739→preserved
+   740→removed
+   741→unsupported
+   742→19. ADOBE & CREATIVE
+   743→
+   744→Create:
+   745→
+   746→/tools/adobe
+   747→
+   748→Support only genuine capabilities.
+   749→
+   750→Photoshop:
+   751→
+   752→PSD → PNG
+   753→PSD → JPG
+   754→PSD → WebP
+   755→PSD → PDF
+   756→PSD Preview
+   757→Layer information where supported
+   758→
+   759→Illustrator:
+   760→
+   761→AI → PDF
+   762→AI → SVG
+   763→AI → PNG
+   764→AI → JPG
+   765→AI Preview
+   766→
+   767→InDesign:
+   768→
+   769→INDD → PDF where supported
+   770→IDML → PDF where supported
+   771→preview/inspection where supported
+   772→
+   773→XD:
+   774→
+   775→XD → PDF where supported
+   776→asset extraction where supported
+   777→preview where supported
+   778→
+   779→Creative utilities:
+   780→
+   781→metadata inspection
+   782→dimensions
+   783→color mode
+   784→page/artboard count
+   785→layer count
+   786→preview
+   787→
+   788→Never rename an extension and call it a conversion.
+   789→
+   790→20. CREATIVE ENGINE
+   791→
+   792→Create:
+   793→
+   794→CreativeConversionEngine
+   795→
+   796→Provider architecture:
+   797→
+   798→LocalCreativeProvider
+   799→OpenSourceCreativeProvider where appropriate
+   800→ExternalCreativeProvider
+   801→
+   802→Capability states:
+   803→
+   804→Supported
+   805→Provider Dependent
+   806→Unsupported
+   807→Temporarily Unavailable
+   808→
+   809→The frontend must dynamically show available conversions.
+   810→
+   811→21. VIDEO & AUDIO
+   812→
+   813→Implement:
+   814→
+   815→Video Compressor
+   816→Video Converter
+   817→Video → GIF
+   818→GIF → MP4
+   819→Audio Compressor
+   820→MP3 → WAV
+   821→WAV → MP3
+   822→Audio Extraction
+   823→Subtitle Converter
+   824→SRT → VTT
+   825→VTT → SRT
+   826→Subtitle Editor
+   827→Video Metadata Inspector
+   828→Audio Metadata Inspector
+   829→
+   830→Use FFmpeg or another appropriate real processing engine.
+   831→
+   832→Heavy media jobs must run through workers.
+   833→
+   834→22. DOCUMENT GENERATORS
+   835→
+   836→Create:
+   837→
+   838→Invoice Generator
+   839→Quotation Generator
+   840→Receipt Generator
+   841→Purchase Order
+   842→Proforma Invoice
+   843→Salary Slip
+   844→Business Letter
+   845→Certificate Generator
+   846→
+   847→Allow:
+   848→
+   849→company information
+   850→logo
+   851→address
+   852→customer
+   853→line items
+   854→quantity
+   855→price
+   856→discount
+   857→taxes
+   858→currency
+   859→notes
+   860→branding
+   861→
+   862→Output:
+   863→
+   864→PDF
+   865→DOCX where supported
+   866→
+   867→Do not hardcode company information.
+   868→
+   869→23. BUSINESS TOOLS
+   870→
+   871→Create:
+   872→
+   873→Percentage Calculator
+   874→Discount Calculator
+   875→Profit Margin Calculator
+   876→Markup Calculator
+   877→ROI Calculator
+   878→Break-even Calculator
+   879→Commission Calculator
+   880→VAT Calculator
+   881→GST Calculator
+   882→Sales Tax Calculator
+   883→Salary Calculator
+   884→Invoice Calculator
+   885→Currency Converter
+   886→Loan Calculator
+   887→EMI Calculator
+   888→
+   889→Every calculator must have:
+   890→
+   891→validated inputs
+   892→correct formulas
+   893→result
+   894→calculation breakdown
+   895→copy
+   896→reset
+   897→24. E-COMMERCE TOOLS
+   898→
+   899→Create:
+   900→
+   901→Product Profit Calculator
+   902→
+   903→Inputs:
+   904→
+   905→product cost
+   906→selling price
+   907→marketplace commission
+   908→payment fee
+   909→shipping
+   910→tax
+   911→
+   912→Outputs:
+   913→
+   914→revenue
+   915→total fees
+   916→net profit
+   917→margin
+   918→markup
+   919→
+   920→Product utilities:
+   921→
+   922→Product Image Resizer
+   923→Product Image Compressor
+   924→Background Removal
+   925→SKU Generator
+   926→Barcode Generator
+   927→Product Description Generator
+   928→Meta Title Generator
+   929→Meta Description Generator
+   930→Marketplace Commission Calculator
+   931→COD Calculator
+   932→Shipping Calculator
+   933→Retail Price Calculator
+   934→Wholesale Price Calculator
+   935→25. DEVELOPER TOOLS
+   936→
+   937→Implement:
+   938→
+   939→JSON Formatter
+   940→JSON Validator
+   941→JSON Minifier
+   942→JSON → CSV
+   943→CSV → JSON
+   944→XML Formatter
+   945→XML Validator
+   946→XML → JSON
+   947→YAML Formatter
+   948→YAML → JSON
+   949→Base64 Encoder
+   950→Base64 Decoder
+   951→URL Encoder
+   952→URL Decoder
+   953→HTML Encoder
+   954→HTML Decoder
+   955→JWT Decoder
+   956→UUID Generator
+   957→Regex Tester
+   958→Unix Timestamp Converter
+   959→Hash Generator
+   960→HEX → RGB
+   961→RGB → HEX
+   962→Markdown → HTML
+   963→HTML → Markdown
+   964→
+   965→Prefer client-side processing for privacy where practical.
+   966→
+   967→26. SEO TOOLS
+   968→
+   969→Implement:
+   970→
+   971→Meta Tag Generator
+   972→Open Graph Generator
+   973→Twitter/X Meta Generator
+   974→UTM Builder
+   975→Robots.txt Generator
+   976→Sitemap Generator
+   977→Schema Markup Generator
+   978→Keyword Density Calculator
+   979→SEO Slug Generator
+   980→Text Analyzer
+   981→
+   982→Outputs must be generated from actual user inputs.
+   983→
+   984→27. SOCIAL MEDIA TOOLS
+   985→
+   986→Implement:
+   987→
+   988→Instagram Image Resizer
+   989→Facebook Image Resizer
+   990→YouTube Thumbnail Resizer
+   991→LinkedIn Image Resizer
+   992→X Image Resizer
+   993→TikTok Image Resizer
+   994→Pinterest Image Resizer
+   995→Social Image Cropper
+   996→YouTube Thumbnail Maker
+   997→Social Caption Formatter
+   998→Hashtag Utility
+   999→28. QR & BARCODE
+  1000→
+  1001→QR Generator:
+  1002→
+  1003→Support:
+  1004→
+  1005→URL
+  1006→Text
+  1007→Email
+  1008→Phone
+  1009→Wi-Fi
+  1010→vCard
+  1011→
+  1012→Options:
+  1013→
+  1014→size
+  1015→error correction
+  1016→colors
+  1017→logo where supported
+  1018→
+  1019→Output:
+  1020→
+  1021→PNG
+  1022→SVG
+  1023→
+  1024→Barcode generator:
+  1025→
+  1026→Support common legitimate barcode formats.
+  1027→
+  1028→29. YOUTUBE UTILITIES
+  1029→
+  1030→Implement only legitimate functionality.
+  1031→
+  1032→Possible:
+  1033→
+  1034→public thumbnail retrieval
+  1035→metadata extraction
+  1036→transcript processing where permitted
+  1037→subtitle conversion
+  1038→thumbnail creator
+  1039→thumbnail resizing
+  1040→
+  1041→Do not implement a generic copyrighted-video ripping system.
+  1042→
+  1043→30. TEXT TOOLS
+  1044→
+  1045→Implement:
+  1046→
+  1047→Word Counter
+  1048→Character Counter
+  1049→Sentence Counter
+  1050→Paragraph Counter
+  1051→Reading Time
+  1052→Uppercase
+  1053→Lowercase
+  1054→Title Case
+  1055→Remove Duplicate Lines
+  1056→Remove Extra Spaces
+  1057→Text Sorter
+  1058→Text Cleaner
+  1059→Text Diff
+  1060→Lorem Ipsum Generator
+  1061→31. CALCULATOR HUB
+  1062→
+  1063→Implement:
+  1064→
+  1065→Percentage
+  1066→Age
+  1067→Date
+  1068→Time
+  1069→Discount
+  1070→Profit
+  1071→Margin
+  1072→Markup
+  1073→ROI
+  1074→EMI
+  1075→Loan
+  1076→VAT
+  1077→GST
+  1078→Sales Tax
+  1079→Tip
+  1080→Currency
+  1081→Length
+  1082→Weight
+  1083→Temperature
+  1084→Area
+  1085→Volume
+  1086→Speed
+  1087→Data Storage
+  1088→Time Zone
+  1089→
+  1090→All formulas must be independently tested.
+  1091→
+  1092→32. GLOBAL SEARCH
+  1093→
+  1094→Create:
+  1095→
+  1096→Ctrl/Cmd + K command search.
+  1097→
+  1098→Search across:
+  1099→
+  1100→tools
+  1101→categories
+  1102→keywords
+  1103→recent tools
+  1104→favorites
+  1105→
+  1106→Support:
+  1107→
+  1108→fuzzy search
+  1109→typo tolerance
+  1110→keyboard navigation
+  1111→category labels
+  1112→recent tools
+  1113→33. AUTHENTICATION
+  1114→
+  1115→Implement real authentication:
+  1116→
+  1117→Registration
+  1118→Login
+  1119→Logout
+  1120→Email Verification
+  1121→Password Reset
+  1122→Password Change
+  1123→Session Management
+  1124→Account Deletion
+  1125→Optional OAuth
+  1126→
+  1127→Use secure password hashing.
+  1128→
+  1129→Never store plaintext passwords.
+  1130→
+  1131→Use secure cookies.
+  1132→
+  1133→Implement session expiration and revocation.
+  1134→
+  1135→34. USER ACCOUNT
+  1136→
+  1137→Authenticated users get:
+  1138→
+  1139→Profile
+  1140→Favorites
+  1141→Recent Tools
+  1142→Processing History
+  1143→Saved Documents
+  1144→Saved Templates
+  1145→Usage
+  1146→Subscription
+  1147→API Keys
+  1148→35. FILE STORAGE
+  1149→
+  1150→Use S3-compatible storage in production.
+  1151→
+  1152→Development may use local storage.
+  1153→
+  1154→Create:
+  1155→
+  1156→StorageProvider
+  1157→
+  1158→Storage lifecycle:
+  1159→
+  1160→Upload
+  1161→
+  1162→→ Validate
+  1163→
+  1164→→ Scan
+  1165→
+  1166→→ Process
+  1167→
+  1168→→ Validate Output
+  1169→
+  1170→→ Store
+  1171→
+  1172→→ Download
+  1173→
+  1174→→ Expire
+  1175→
+  1176→→ Delete
+  1177→
+  1178→Never store large binary files directly inside PostgreSQL.
+  1179→
+  1180→36. FILE VALIDATION
+  1181→
+  1182→Never trust:
+  1183→
+  1184→extension
+  1185→filename
+  1186→MIME type supplied by browser
+  1187→
+  1188→Validate:
+  1189→
+  1190→extension
+  1191→MIME
+  1192→magic bytes
+  1193→parser validity
+  1194→size
+  1195→dimensions where appropriate
+  1196→
+  1197→Example:
+  1198→
+  1199→A file called:
+  1200→
+  1201→invoice.pdf
+  1202→
+  1203→must actually be a valid PDF.
+  1204→
+  1205→37. FILE SECURITY
+  1206→
+  1207→Implement:
+  1208→
+  1209→quarantine
+  1210→malware scanning
+  1211→safe filenames
+  1212→path traversal protection
+  1213→resource limits
+  1214→ownership checks
+  1215→signed URLs
+  1216→temporary storage
+  1217→automatic deletion
+  1218→38. MALWARE SCANNING
+  1219→
+  1220→Create:
+  1221→
+  1222→MalwareScanner
+  1223→
+  1224→Potential providers:
+  1225→
+  1226→ClamAV
+  1227→External scanner
+  1228→
+  1229→States:
+  1230→
+  1231→CLEAN
+  1232→INFECTED
+  1233→SUSPICIOUS
+  1234→ERROR
+  1235→
+  1236→If scanning fails, do not automatically treat the file as clean.
+  1237→
+  1238→39. REDIS
+  1239→
+  1240→Use Redis for:
+  1241→
+  1242→queues
+  1243→distributed locks
+  1244→rate limiting
+  1245→temporary caching
+  1246→worker coordination
+  1247→
+  1248→PostgreSQL remains the authoritative source of business records.
+  1249→
+  1250→40. JOB QUEUE
+  1251→
+  1252→Use BullMQ or an equivalent reliable queue.
+  1253→
+  1254→Queues:
+  1255→
+  1256→PDF
+  1257→Office
+  1258→Image
+  1259→Media
+  1260→OCR
+  1261→Creative
+  1262→ZIP
+  1263→AI
+  1264→Cleanup
+  1265→Notification
+  1266→
+  1267→Jobs must contain:
+  1268→
+  1269→job ID
+  1270→user ID
+  1271→tool ID
+  1272→input asset IDs
+  1273→options
+  1274→priority
+  1275→timestamps
+  1276→attempts
+  1277→41. JOB STATES
+  1278→
+  1279→Use:
+  1280→
+  1281→CREATED
+  1282→QUEUED
+  1283→VALIDATING
+  1284→SCANNING
+  1285→PROCESSING
+  1286→VALIDATING_OUTPUT
+  1287→COMPLETED
+  1288→FAILED
+  1289→CANCELLED
+  1290→EXPIRED
+  1291→
+  1292→Prevent invalid state transitions.
+  1293→
+  1294→Never allow jobs to remain permanently stuck in PROCESSING.
+  1295→
+  1296→42. WORKER ARCHITECTURE
+  1297→
+  1298→Create isolated workers:
+  1299→
+  1300→PDF Worker
+  1301→Office Worker
+  1302→Image Worker
+  1303→Media Worker
+  1304→OCR Worker
+  1305→Creative Worker
+  1306→Cleanup Worker
+  1307→AI Worker where appropriate
+  1308→
+  1309→Workers should run independently from the web application.
+  1310→
+  1311→43. WORKER SECURITY
+  1312→
+  1313→Workers should:
+  1314→
+  1315→run with limited privileges
+  1316→preferably use non-root users
+  1317→use isolated temporary directories
+  1318→have CPU limits
+  1319→have memory limits
+  1320→have timeouts
+  1321→clean temporary files
+  1322→restrict filesystem access
+  1323→avoid arbitrary code execution
+  1324→44. PDF ENGINE
+  1325→
+  1326→Create:
+  1327→
+  1328→PdfProcessingEngine
+  1329→
+  1330→Implement genuine:
+  1331→
+  1332→merge
+  1333→split
+  1334→rotate
+  1335→extract
+  1336→delete
+  1337→reorder
+  1338→watermark
+  1339→page numbering
+  1340→compression
+  1341→rendering
+  1342→text extraction
+  1343→45. OFFICE ENGINE
+  1344→
+  1345→Create:
+  1346→
+  1347→OfficeConversionEngine
+  1348→
+  1349→Use LibreOffice headless or another legitimate processing provider where appropriate.
+  1350→
+  1351→The engine must perform actual conversion.
+  1352→
+  1353→Never copy input to output and change the extension.
+  1354→
+  1355→46. IMAGE ENGINE
+  1356→
+  1357→Create:
+  1358→
+  1359→ImageProcessingEngine
+  1360→
+  1361→Use appropriate production libraries such as:
+  1362→
+  1363→Sharp
+  1364→ImageMagick
+  1365→
+  1366→Support:
+  1367→
+  1368→resize
+  1369→crop
+  1370→compression
+  1371→conversion
+  1372→metadata removal
+  1373→thumbnails
+  1374→watermarking
+  1375→47. MEDIA ENGINE
+  1376→
+  1377→Create:
+  1378→
+  1379→MediaProcessingEngine
+  1380→
+  1381→Use FFmpeg or equivalent.
+  1382→
+  1383→Implement real:
+  1384→
+  1385→codec conversion
+  1386→compression
+  1387→resolution changes
+  1388→bitrate changes
+  1389→GIF conversion
+  1390→audio extraction
+  1391→subtitle handling
+  1392→48. OCR ENGINE
+  1393→
+  1394→Create:
+  1395→
+  1396→OCREngine
+  1397→
+  1398→Providers:
+  1399→
+  1400→Tesseract
+  1401→Optional cloud OCR provider
+  1402→
+  1403→Support:
+  1404→
+  1405→English
+  1406→Urdu
+  1407→Arabic
+  1408→additional languages when configured
+  1409→
+  1410→Pipeline:
+  1411→
+  1412→Input
+  1413→
+  1414→→ preprocessing
+  1415→
+  1416→→ OCR
+  1417→
+  1418→→ text extraction
+  1419→
+  1420→→ optional layout reconstruction
+  1421→
+  1422→→ output
+  1423→
+  1424→Never fabricate OCR text.
+  1425→
+  1426→49. EMAIL
+  1427→
+  1428→Create:
+  1429→
+  1430→EmailProvider
+  1431→
+  1432→Support:
+  1433→
+  1434→SMTP
+  1435→transactional email provider
+  1436→
+  1437→Emails:
+  1438→
+  1439→verification
+  1440→password reset
+  1441→security notification
+  1442→subscription
+  1443→payment
+  1444→API notifications
+  1445→
+  1446→Use reusable templates.
+  1447→
+  1448→50. PAYMENTS
+  1449→
+  1450→Create:
+  1451→
+  1452→PaymentProvider
+  1453→
+  1454→Support a production payment provider such as Stripe and architect for additional providers.
+  1455→
+  1456→Implement:
+  1457→
+  1458→checkout
+  1459→subscriptions
+  1460→upgrade
+  1461→downgrade
+  1462→cancellation
+  1463→renewal
+  1464→failed payment
+  1465→refund
+  1466→invoices
+  1467→customer portal
+  1468→
+  1469→Never trust frontend payment status.
+  1470→
+  1471→51. PAYMENT WEBHOOKS
+  1472→
+  1473→Webhook processing must include:
+  1474→
+  1475→signature verification
+  1476→idempotency
+  1477→event persistence
+  1478→retry safety
+  1479→duplicate protection
+  1480→
+  1481→The payment provider webhook must be authoritative for subscription state.
+  1482→
+  1483→52. ENTITLEMENT SYSTEM
+  1484→
+  1485→Create:
+  1486→
+  1487→EntitlementService
+  1488→
+  1489→Centralize:
+  1490→
+  1491→file size limits
+  1492→processing limits
+  1493→daily limits
+  1494→monthly limits
+  1495→batch processing
+  1496→OCR
+  1497→API
+  1498→history
+  1499→priority
+  1500→advertisements
+  1501→
+  1502→Do not hardcode plan rules throughout the frontend.
+  1503→
+  1504→53. MONETIZATION
+  1505→
+  1506→Plans:
+  1507→
+  1508→FREE
+  1509→
+  1510→basic tools
+  1511→limited usage
+  1512→smaller file sizes
+  1513→advertisements
+  1514→
+  1515→PRO
+  1516→
+  1517→no ads
+  1518→larger files
+  1519→higher limits
+  1520→batch processing
+  1521→priority processing
+  1522→history
+  1523→
+  1524→BUSINESS
+  1525→
+  1526→teams
+  1527→API
+  1528→bulk processing
+  1529→high limits
+  1530→business functionality
+  1531→
+  1532→All limits must be enforced server-side.
+  1533→
+  1534→54. AD SYSTEM
+  1535→
+  1536→Create an ad provider abstraction.
+  1537→
+  1538→Potential:
+  1539→
+  1540→AdSense
+  1541→Ad Manager
+  1542→future providers
+  1543→
+  1544→Do not place advertisements:
+  1545→
+  1546→inside upload controls
+  1547→beside destructive buttons
+  1548→where they look like application controls
+  1549→
+  1550→Pro/Business should support ad-free experience according to actual entitlement.
+  1551→
+  1552→55. AI PLATFORM
+  1553→
+  1554→Create:
+  1555→
+  1556→AIProvider
+  1557→
+  1558→Support:
+  1559→
+  1560→AI product descriptions
+  1561→SEO content
+  1562→social captions
+  1563→text rewriting
+  1564→document summarization
+  1565→OCR cleanup
+  1566→structured data generation
+  1567→
+  1568→Implement:
+  1569→
+  1570→server-side API keys
+  1571→usage tracking
+  1572→cost tracking
+  1573→plan limits
+  1574→timeout
+  1575→retries
+  1576→abuse controls
+  1577→
+  1578→Never expose AI API keys to the browser.
+  1579→
+  1580→56. API PLATFORM
+  1581→
+  1582→Create:
+  1583→
+  1584→/api/v1
+  1585→
+  1586→Implement:
+  1587→
+  1588→API keys
+  1589→key creation
+  1590→key revocation
+  1591→usage
+  1592→limits
+  1593→rate limiting
+  1594→audit logs
+  1595→
+  1596→Example endpoints:
+  1597→
+  1598→POST /api/v1/pdf/compress
+  1599→
+  1600→POST /api/v1/pdf/merge
+  1601→
+  1602→POST /api/v1/image/compress
+  1603→
+  1604→POST /api/v1/image/convert
+  1605→
+  1606→POST /api/v1/office/docx-to-pdf
+  1607→
+  1608→POST /api/v1/office/xlsx-to-pdf
+  1609→
+  1610→POST /api/v1/office/pptx-to-pdf
+  1611→
+  1612→POST /api/v1/office/xlsx-to-csv
+  1613→
+  1614→POST /api/v1/office/csv-to-xlsx
+  1615→
+  1616→57. API KEY SECURITY
+  1617→
+  1618→Do not store API secrets unnecessarily in plaintext.
+  1619→
+  1620→Use:
+  1621→
+  1622→hashed secrets
+  1623→key prefixes
+  1624→revocation
+  1625→usage tracking
+  1626→last-used timestamps
+  1627→
+  1628→Never expose secret API keys again after creation unless the security model explicitly requires it.
+  1629→
+  1630→58. API RATE LIMITING
+  1631→
+  1632→Rate limit by:
+  1633→
+  1634→IP
+  1635→user
+  1636→API key
+  1637→endpoint
+  1638→subscription plan
+  1639→
+  1640→Use Redis for distributed rate limiting.
+  1641→
+  1642→59. API IDEMPOTENCY
+  1643→
+  1644→Support idempotency keys for operations where duplicate processing could occur.
+  1645→
+  1646→60. ADMIN PANEL
+  1647→
+  1648→Create a complete admin system.
+  1649→
+  1650→Dashboard:
+  1651→
+  1652→total users
+  1653→active users
+  1654→tool usage
+  1655→jobs
+  1656→failures
+  1657→storage
+  1658→subscriptions
+  1659→revenue
+  1660→API usage
+  1661→
+  1662→All values must come from real database records.
+  1663→
+  1664→61. ADMIN TOOL MANAGEMENT
+  1665→
+  1666→Admin can manage:
+  1667→
+  1668→tools
+  1669→categories
+  1670→descriptions
+  1671→SEO metadata
+  1672→availability
+  1673→limits
+  1674→providers
+  1675→feature flags
+  1676→62. ADMIN JOB MANAGEMENT
+  1677→
+  1678→Display:
+  1679→
+  1680→job ID
+  1681→user
+  1682→tool
+  1683→status
+  1684→queue
+  1685→worker
+  1686→duration
+  1687→errors
+  1688→timestamps
+  1689→63. ADMIN INTEGRATION CENTER
+  1690→
+  1691→Create:
+  1692→
+  1693→/admin/integrations
+  1694→
+  1695→Display:
+  1696→
+  1697→Database
+  1698→
+  1699→Redis
+  1700→
+  1701→Storage
+  1702→
+  1703→PDF Engine
+  1704→
+  1705→Office Engine
+  1706→
+  1707→Image Engine
+  1708→
+  1709→FFmpeg
+  1710→
+  1711→OCR
+  1712→
+  1713→Creative
+  1714→
+  1715→Email
+  1716→
+  1717→Payments
+  1718→
+  1719→AI
+  1720→
+  1721→Analytics
+  1722→
+  1723→Monitoring
+  1724→
+  1725→Malware Scanner
+  1726→
+  1727→Cloudflare/Turnstile
+  1728→
+  1729→For every provider show:
+  1730→
+  1731→Configured
+  1732→Not Configured
+  1733→Connected
+  1734→Failed
+  1735→Last Checked
+  1736→
+  1737→Never expose secrets.
+  1738→
+  1739→Health status must be based on real checks.
+  1740→
+  1741→64. ANALYTICS
+  1742→
+  1743→Track real events:
+  1744→
+  1745→page_view
+  1746→tool_view
+  1747→tool_start
+  1748→upload_started
+  1749→upload_completed
+  1750→job_created
+  1751→job_completed
+  1752→job_failed
+  1753→download
+  1754→signup
+  1755→login
+  1756→subscription_started
+  1757→subscription_cancelled
+  1758→API request
+  1759→
+  1760→Use first-party database events for core business records.
+  1761→
+  1762→Optionally integrate a product analytics provider.
+  1763→
+  1764→65. ERROR MONITORING
+  1765→
+  1766→Integrate a service such as Sentry or equivalent.
+  1767→
+  1768→Track:
+  1769→
+  1770→frontend errors
+  1771→backend errors
+  1772→worker failures
+  1773→queue failures
+  1774→processor failures
+  1775→unexpected exceptions
+  1776→
+  1777→Never send sensitive secrets.
+  1778→
+  1779→66. STRUCTURED LOGGING
+  1780→
+  1781→Production logs should include:
+  1782→
+  1783→timestamp
+  1784→service
+  1785→environment
+  1786→level
+  1787→request ID
+  1788→user ID where appropriate
+  1789→job ID
+  1790→tool ID
+  1791→duration
+  1792→error code
+  1793→
+  1794→Never expose sensitive file contents or secrets.
+  1795→
+  1796→67. REQUEST CORRELATION
+  1797→
+  1798→Use request IDs and job IDs.
+  1799→
+  1800→Example:
+  1801→
+  1802→Request:
+  1803→
+  1804→REQ-12345
+  1805→
+  1806→Job:
+  1807→
+  1808→JOB-AB921
+  1809→
+  1810→Worker:
+  1811→
+  1812→OFFICE-03
+  1813→
+  1814→This allows support staff to trace processing failures.
+  1815→
+  1816→68. HEALTH CHECKS
+  1817→
+  1818→Create:
+  1819→
+  1820→/api/health
+  1821→
+  1822→/api/ready
+  1823→
+  1824→/api/health/database
+  1825→
+  1826→/api/health/redis
+  1827→
+  1828→/api/health/storage
+  1829→
+  1830→These endpoints must perform real dependency checks.
+  1831→
+  1832→Never return "healthy" if the dependency is unavailable.
+  1833→
+  1834→69. WORKER HEARTBEATS
+  1835→
+  1836→Workers should report:
+  1837→
+  1838→worker ID
+  1839→queue
+  1840→status
+  1841→last heartbeat
+  1842→current job
+  1843→version
+  1844→
+  1845→Admin should see:
+  1846→
+  1847→healthy
+  1848→idle
+  1849→busy
+  1850→degraded
+  1851→offline
+  1852→70. AUTOMATIC CLEANUP
+  1853→
+  1854→Create scheduled cleanup jobs.
+  1855→
+  1856→Clean:
+  1857→
+  1858→expired uploads
+  1859→expired outputs
+  1860→temporary files
+  1861→abandoned jobs
+  1862→failed temporary files
+  1863→expired sessions
+  1864→old logs according to retention
+  1865→stale processing directories
+  1866→
+  1867→Cleanup must be safe and idempotent.
+  1868→
+  1869→71. STORAGE QUOTAS
+  1870→
+  1871→Implement:
+  1872→
+  1873→Anonymous quota
+  1874→
+  1875→Free quota
+  1876→
+  1877→Pro quota
+  1878→
+  1879→Business quota
+  1880→
+  1881→Enforce limits server-side.
+  1882→
+  1883→72. CONCURRENCY
+  1884→
+  1885→Prevent one user from consuming all processing resources.
+  1886→
+  1887→Use plan-based concurrency.
+  1888→
+  1889→Example architecture:
+  1890→
+  1891→Free:
+  1892→
+  1893→low concurrency
+  1894→
+  1895→Pro:
+  1896→
+  1897→higher concurrency
+  1898→
+  1899→Business:
+  1900→
+  1901→configurable
+  1902→
+  1903→The exact limits must be configurable.
+  1904→
+  1905→73. PRIORITY PROCESSING
+  1906→
+  1907→Support configurable job priority.
+  1908→
+  1909→Do not hardcode priority rules across the application.
+  1910→
+  1911→74. FAILURE HANDLING
+  1912→
+  1913→If a processing job fails:
+  1914→
+  1915→Record error
+  1916→Clean temporary files
+  1917→Release locks
+  1918→Update job status
+  1919→Notify frontend
+  1920→Retry only if appropriate
+  1921→Eventually move unrecoverable jobs to dead-letter handling
+  1922→
+  1923→Do not retry corrupt or unsupported files indefinitely.
+  1924→
+  1925→75. OUTPUT VALIDATION
+  1926→
+  1927→Every processor must validate its output.
+  1928→
+  1929→Check:
+  1930→
+  1931→file exists
+  1932→file size
+  1933→MIME
+  1934→magic bytes
+  1935→parser validity
+  1936→expected structure
+  1937→expected page/sheet/slide count where applicable
+  1938→
+  1939→Only after successful validation:
+  1940→
+  1941→job.status = COMPLETED
+  1942→
+  1943→76. SECURE DOWNLOADS
+  1944→
+  1945→Downloads must:
+  1946→
+  1947→verify ownership
+  1948→use signed URLs
+  1949→expire
+  1950→prevent path traversal
+  1951→never expose internal storage paths
+  1952→
+  1953→Record download events.
+  1954→
+  1955→77. USER PRIVACY
+  1956→
+  1957→Create accurate file-retention behavior.
+  1958→
+  1959→Every file should have:
+  1960→
+  1961→createdAt
+  1962→
+  1963→expiresAt
+  1964→
+  1965→status
+  1966→
+  1967→Users should be able to delete their files where appropriate.
+  1968→
+  1969→Deletion must remove:
+  1970→
+  1971→database record
+  1972→storage object
+  1973→temporary files
+  1974→78. DATABASE MODELS
+  1975→
+  1976→Use appropriate normalized models such as:
+  1977→
+  1978→User
+  1979→
+  1980→Session
+  1981→
+  1982→Role
+  1983→
+  1984→Category
+  1985→
+  1986→Tool
+  1987→
+  1988→ToolVersion
+  1989→
+  1990→FileAsset
+  1991→
+  1992→ProcessingJob
+  1993→
+  1994→JobEvent
+  1995→
+  1996→ToolUsage
+  1997→
+  1998→FavoriteTool
+  1999→
+  2000→ToolHistory
+
+[showing lines 1-2000 of 2889; use offset=2001 with limit to continue reading]
